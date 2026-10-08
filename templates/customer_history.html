@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer History - Laptech World</title>
+
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --bg: #05070d;
+            --panel: #0f1729;
+            --panel-2: #0a1224;
+            --border: #1e2a44;
+            --accent: #38bdf8;
+            --accent-2: #2563eb;
+            --text: #e5e7eb;
+            --muted: #8ea0c4;
+            --success: #4ade80;
+            --danger: #f87171;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', Arial, sans-serif;
+            background-color: var(--bg);
+            background-image:
+                radial-gradient(circle at 15% 0%, rgba(56, 189, 248, 0.10), transparent 45%),
+                radial-gradient(circle at 85% 100%, rgba(37, 99, 235, 0.08), transparent 45%);
+            background-attachment: fixed;
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(15, 23, 41, 0.92);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .navbar-brand img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            filter: drop-shadow(0 0 8px rgba(56,189,248,1));
+        }
+
+        .navbar-brand h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+            color: #7dd3fc;
+        }
+
+        .navbar-brand small {
+            display: block;
+            font-size: 10.5px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .nav-link {
+            color: var(--muted);
+            text-decoration: none;
+            background: rgba(56,189,248,0.08);
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            color: #04101f;
+            background: linear-gradient(90deg, var(--accent-2), var(--accent));
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1100px;
+            margin: 30px auto 50px;
+        }
+
+        .customer-card {
+            background: rgba(15, 23, 41, 0.92);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent-2);
+            border-radius: 16px;
+            padding: 22px 26px;
+            margin-bottom: 24px;
+        }
+
+        .customer-card h1 {
+            margin: 0 0 6px;
+            font-size: 24px;
+            color: #ffffff;
+        }
+
+        .customer-card p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .section {
+            background: rgba(15, 23, 41, 0.92);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 10px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 820px;
+        }
+
+        th, td {
+            border-bottom: 1px solid var(--border);
+            padding: 14px;
+            text-align: center;
+            font-size: 13.5px;
+        }
+
+        th {
+            background: var(--panel-2);
+            color: var(--accent);
+            font-size: 11.5px;
+            text-transform: uppercase;
+        }
+
+        tbody tr:hover td {
+            background: rgba(56,189,248,0.06);
+        }
+
+        .invoice-no {
+            font-weight: 700;
+            color: #7dd3fc;
+        }
+
+        .money {
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .remaining-due {
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        .remaining-clear {
+            color: var(--muted);
+        }
+
+        .view-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 700;
+            text-decoration: none;
+            background: rgba(56,189,248,0.12);
+            color: #7dd3fc;
+            border: 1px solid rgba(56,189,248,0.35);
+        }
+
+        .view-btn:hover {
+            background: rgba(56,189,248,0.26);
+        }
+
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: var(--muted);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 13.5px;
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="navbar">
+
+    <div class="navbar-brand">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Laptech World">
+        <div>
+            <h2>Laptech World</h2>
+            <small>Management System</small>
+        </div>
+    </div>
+
+    <a href="{{ url_for('customers') }}" class="nav-link">Customers</a>
+
+</div>
+
+
+<div class="container">
+
+    <a href="{{ url_for('customers') }}" class="back-link">← Back to Customers</a>
+
+    <div class="customer-card">
+        <h1>{{ name if name else (history[0].invoice.customer_name if history else 'Customer') }}</h1>
+        <p>Phone: {{ phone if phone else 'N/A' }}</p>
+    </div>
+
+    <div class="section">
+
+        {% if history %}
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Invoice #</th>
+                    <th>Date</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Paid</th>
+                    <th>Remaining</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for h in history %}
+
+                <tr>
+                    <td class="invoice-no">{{ h.invoice.invoice_number }}</td>
+                    <td>{{ h.invoice.invoice_date.strftime('%d-%m-%Y %I:%M %p') }}</td>
+                    <td>{{ h.item_count }}</td>
+                    <td class="money">Rs. {{ "%.2f"|format(h.total) }}</td>
+                    <td class="money">Rs. {{ "%.2f"|format(h.paid) }}</td>
+                    <td class="{{ 'remaining-due' if h.remaining > 0.009 else 'remaining-clear' }}">
+                        Rs. {{ "%.2f"|format(h.remaining) }}
+                    </td>
+                    <td>
+                        <a class="view-btn" href="{{ url_for('invoice', invoice_id=h.invoice.id) }}">
+                            View Invoice
+                        </a>
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% else %}
+
+        <div class="empty">No purchase history found.</div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

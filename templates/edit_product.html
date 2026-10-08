@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product - Laptech World</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+        :root {
+            --bg: #05070d; --panel: #0f1729; --panel-2: #0a1120;
+            --border: #1e2a44; --accent: #38bdf8; --accent-2: #2563eb;
+            --text: #e5e7eb; --muted: #8ea0c4; --danger: #ef4444; --success: #4ade80;
+        }
+        * { box-sizing: border-box; }
+        html, body {
+            background-color: var(--bg) !important;
+            font-family: 'Poppins', Arial, sans-serif !important;
+            color: var(--text); margin: 0;
+        }
+        body {
+            background-image:
+                radial-gradient(circle at 15% 0%, rgba(56, 189, 248, 0.10), transparent 45%),
+                radial-gradient(circle at 85% 100%, rgba(37, 99, 235, 0.10), transparent 45%);
+            min-height: 100vh; position: relative; overflow-x: hidden;
+        }
+        .star {
+            position: fixed; width: 3px; height: 3px; background: #38bdf8;
+            border-radius: 50%; opacity: 0.6; animation: twinkle 3s ease-in-out infinite;
+            z-index: 0; pointer-events: none;
+        }
+        @keyframes twinkle { 0%, 100% { opacity: 0.15; } 50% { opacity: 1; } }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(15, 23, 41, 0.9) !important; backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border); padding: 16px 30px !important;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.5); position: relative; z-index: 2;
+        }
+        .navbar-brand { display: flex; align-items: center; gap: 16px; }
+        .navbar-brand img {
+            width: 60px; height: 60px; border-radius: 50%; object-fit: cover;
+            filter: drop-shadow(0 0 8px rgba(56,189,248,1));
+        }
+        .navbar-brand h2 { margin: 0; font-size: 22px; font-weight: 800; color: #7dd3fc; }
+        .navbar-brand span { display: block; font-size: 10px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+        
+        .nav-links { display: flex; gap: 12px; align-items: center; }
+        .nav-links a {
+            color: var(--muted) !important; text-decoration: none; font-weight: 600; font-size: 13px;
+            padding: 8px 16px; border: 1px solid var(--border); border-radius: 8px; transition: all 0.2s ease;
+        }
+        .nav-links a:hover { color: #04101f !important; background: linear-gradient(90deg, var(--accent-2), var(--accent)); }
+
+        .container { position: relative; z-index: 1; width: 95%; max-width: 900px; margin: 30px auto 50px; }
+        .dash-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; margin-bottom: 6px; }
+        .container h1 { font-size: 30px; font-weight: 800; margin: 0; color: #38bdf8; }
+        .dash-underline { width: 60px; height: 4px; border-radius: 4px; margin: 12px 0 30px; background: linear-gradient(90deg, var(--accent-2), var(--accent)); }
+
+        /* Card Form Styling */
+        .edit-card {
+            background: rgba(15, 23, 41, 0.9) !important; border: 2px solid var(--border);
+            border-radius: 18px; padding: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+        }
+        .status-badge {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(10, 17, 32, 0.8); border: 1px solid var(--border);
+            padding: 12px 20px; border-radius: 12px; margin-bottom: 25px;
+        }
+        .status-badge span { font-size: 13px; font-weight: 600; color: var(--muted); }
+        .status-badge strong { color: var(--accent); }
+
+        .form-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;
+        }
+        .form-group { margin-bottom: 5px; }
+        .form-group label {
+            display: block; font-size: 12px; font-weight: 600; color: var(--muted);
+            margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .form-group input, .form-group select {
+            width: 100%; padding: 12px 14px; background: var(--panel-2);
+            border: 1.5px solid var(--border); border-radius: 10px; color: var(--text);
+            font-size: 14px; font-family: inherit; outline: none; transition: border-color 0.2s ease;
+        }
+        .form-group input:focus, .form-group select:focus { border-color: var(--accent); }
+
+        .btn-submit {
+            width: 100%; padding: 14px; margin-top: 25px; border: none; border-radius: 10px;
+            background: linear-gradient(90deg, var(--accent-2), var(--accent));
+            color: #04101f; font-weight: 800; font-size: 15px; cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.25);
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4); }
+
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px; margin-top: 20px;
+            color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 600;
+        }
+        .back-link:hover { color: var(--accent); }
+    </style>
+</head>
+<body>
+
+<div id="stars"></div>
+
+<div class="navbar">
+    <div class="navbar-brand">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Laptech World">
+        <div>
+            <h2>Laptech World</h2>
+            <span>Management System</span>
+        </div>
+    </div>
+    <div class="nav-links">
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('products') }}">Products</a>
+        <a href="{{ url_for('sales') }}">Sales</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="dash-head">
+        <h1>✏️ Edit Product</h1>
+    </div>
+    <div class="dash-underline"></div>
+
+    <div class="edit-card">
+        <div class="status-badge">
+            <span>Product ID: <strong>#{{ product.id }}</strong></span>
+            <span>Current Status: <strong>{% if product.is_available %}Available{% else %}Out of Stock{% endif %}</strong></span>
+        </div>
+
+        <form method="POST">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Category</label>
+                    <select name="category">
+                        <option value="Mobile" {% if product.category == 'Mobile' %}selected{% endif %}>Mobile</option>
+                        <option value="Laptop" {% if product.category == 'Laptop' %}selected{% endif %}>Laptop</option>
+                        <option value="Accessories" {% if product.category == 'Accessories' %}selected{% endif %}>Accessories</option>
+                        <option value="Other" {% if product.category == 'Other' %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Product Name</label>
+                    <input type="text" name="product_name" value="{{ product.product_name or '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Brand</label>
+                    <input type="text" name="brand" value="{{ product.brand or '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Supplier Name</label>
+                    <input type="text" name="supplier_name" value="{{ product.supplier_name or '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Purchase Price</label>
+                    <input type="number" step="0.01" name="purchase_price" value="{{ product.purchase_price or '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Sale Price</label>
+                    <input type="number" step="0.01" name="sale_price" value="{{ product.sale_price or '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Quantity</label>
+                    <input type="number" name="quantity" value="{{ product.quantity or 0 }}">
+                </div>
+
+                <div class="form-group">
+                    <label>IMEI 1</label>
+                    <input type="text" name="imei" value="{{ product.imei or '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label>IMEI 2</label>
+                    <input type="text" name="imei2" value="{{ product.imei2 or '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Serial Number</label>
+                    <input type="text" name="serial_number" value="{{ product.serial_number or '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label>RAM</label>
+                    <input type="text" name="ram" value="{{ product.ram or '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Storage</label>
+                    <input type="text" name="storage" value="{{ product.storage or '' }}">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">💾 Update Product Information</button>
+        </form>
+    </div>
+
+    <a href="{{ url_for('products') }}" class="back-link">⬅️ Back to Products</a>
+</div>
+
+<script>
+    const starsContainer = document.getElementById("stars");
+    for (let i = 0; i < 45; i++) {
+        const star = document.createElement("div");
+        star.className = "star";
+        star.style.top = Math.random() * 100 + "vh";
+        star.style.left = Math.random() * 100 + "vw";
+        star.style.animationDelay = (Math.random() * 3) + "s";
+        starsContainer.appendChild(star);
+    }
+</script>
+
+</body>
+</html>

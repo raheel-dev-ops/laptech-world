@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock - Laptech World</title>
+
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --bg: #05070d;
+            --panel: #0f1729;
+            --panel-2: #0a1224;
+            --border: #1e2a44;
+            --accent: #38bdf8;
+            --accent-2: #2563eb;
+            --text: #e5e7eb;
+            --muted: #8ea0c4;
+            --success: #4ade80;
+            --danger: #f87171;
+            --purple: #c084fc;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', Arial, sans-serif;
+            background-color: var(--bg);
+            background-image:
+                radial-gradient(circle at 15% 0%, rgba(56, 189, 248, 0.10), transparent 45%),
+                radial-gradient(circle at 85% 100%, rgba(37, 99, 235, 0.08), transparent 45%);
+            background-attachment: fixed;
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(15, 23, 41, 0.92);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .navbar-brand img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            filter: drop-shadow(0 0 8px rgba(56,189,248,1));
+        }
+
+        .navbar-brand h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+            color: #7dd3fc;
+        }
+
+        .navbar-brand small {
+            display: block;
+            font-size: 10.5px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .nav-link {
+            color: var(--muted);
+            text-decoration: none;
+            background: rgba(56,189,248,0.08);
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            color: #04101f;
+            background: linear-gradient(90deg, var(--accent-2), var(--accent));
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1400px;
+            margin: 30px auto 50px;
+        }
+
+        .page-head h1 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 800;
+            color: #38bdf8;
+            text-shadow: 0 0 20px rgba(56,189,248,0.6);
+        }
+
+        .page-head .underline {
+            width: 60px;
+            height: 4px;
+            border-radius: 4px;
+            margin: 12px 0 26px;
+            background: linear-gradient(90deg, var(--accent-2), var(--accent));
+        }
+
+        /* SUMMARY CARDS (dashboard style) */
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 22px;
+            margin-bottom: 26px;
+        }
+
+        .summary-card {
+            position: relative;
+            background: rgba(15, 23, 41, 0.9);
+            backdrop-filter: blur(6px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px 26px;
+            text-align: center;
+            overflow: hidden;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5), inset -40px 0 60px -30px rgba(56,189,248,0.25);
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+        }
+
+        .summary-card::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            pointer-events: none;
+            background: radial-gradient(circle, rgba(56,189,248,0.35), transparent 70%);
+        }
+
+        .summary-card:hover {
+            transform: translateY(-8px) scale(1.02) rotate(-0.6deg);
+            border-color: var(--accent);
+            background: rgba(20, 32, 56, 0.95);
+            box-shadow:
+                0 25px 60px rgba(0,0,0,0.6),
+                0 0 0 3px rgba(56,189,248,0.2),
+                inset -50px 0 70px -25px rgba(56,189,248,0.45);
+        }
+
+        .summary-card.has-low:hover {
+            border-color: var(--danger);
+            box-shadow:
+                0 25px 60px rgba(0,0,0,0.6),
+                0 0 0 3px rgba(248,113,113,0.25),
+                inset -50px 0 70px -25px rgba(248,113,113,0.4);
+        }
+
+        .summary-card .icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            line-height: 1;
+            margin: 0 auto 16px;
+            background: rgba(56,189,248,0.1);
+            border: 1px solid rgba(56,189,248,0.25);
+            transition: transform 0.25s ease;
+        }
+
+        .summary-card:hover .icon {
+            transform: scale(1.1) rotate(-4deg);
+        }
+
+        .summary-card h3 {
+            margin: 0 0 10px;
+            font-size: 12.5px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .summary-card p {
+            margin: 0;
+            font-size: 27px;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 0 18px rgba(56,189,248,0.4);
+        }
+
+        .low-warning {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 12px;
+            padding: 5px 11px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #fecaca;
+            background: rgba(248,113,113,0.15);
+            border: 1px solid rgba(248,113,113,0.4);
+            animation: pulseWarn 1.8s ease-in-out infinite;
+        }
+
+        @keyframes pulseWarn {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(248,113,113,0.35); }
+            50% { box-shadow: 0 0 0 6px rgba(248,113,113,0); }
+        }
+
+        .section {
+            background: rgba(15, 23, 41, 0.92);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 22px;
+            overflow-x: auto;
+            scroll-margin-top: 90px;
+        }
+
+        .section h2 {
+            margin: 0 0 16px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+        }
+
+        th, td {
+            border-bottom: 1px solid var(--border);
+            padding: 12px;
+            text-align: center;
+            font-size: 13.5px;
+        }
+
+        th {
+            background: var(--panel-2);
+            color: var(--accent);
+            font-size: 11.5px;
+            text-transform: uppercase;
+        }
+
+        .qty-ok {
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .qty-low {
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        /* STATUS BADGES */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .badge-instock {
+            background: rgba(74,222,128,0.15);
+            color: var(--success);
+            border: 1px solid rgba(74,222,128,0.3);
+        }
+        .badge-low {
+            background: rgba(248,113,113,0.15);
+            color: var(--danger);
+            border: 1px solid rgba(248,113,113,0.3);
+        }
+        .badge-sold {
+            background: rgba(192,132,252,0.15);
+            color: var(--purple);
+            border: 1px solid rgba(192,132,252,0.3);
+        }
+
+        .empty {
+            text-align: center;
+            padding: 24px;
+            color: var(--muted);
+        }
+
+        /* STARS (Dashboard style) */
+
+        .star {
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            background: #38bdf8;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: twinkle 3s ease-in-out infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.15; }
+            50% { opacity: 1; }
+        }
+
+        body {
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="stars"></div>
+
+<div class="navbar">
+
+    <div class="navbar-brand">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Laptech World">
+        <div>
+            <h2>Laptech World</h2>
+            <small>Management System</small>
+        </div>
+    </div>
+
+    <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+
+</div>
+
+
+<div class="container">
+
+    <div class="page-head">
+        <h1>Stock</h1>
+        <div class="underline"></div>
+    </div>
+
+    {% set mobile_low = low_stock|selectattr("category", "equalto", "Mobile")|list %}
+    {% set laptop_low = low_stock|selectattr("category", "equalto", "Laptop")|list %}
+    {% set accessory_low = low_stock|selectattr("category", "equalto", "Accessory")|list %}
+    {% set other_low = low_stock|selectattr("category", "equalto", "Other")|list %}
+
+    <div class="summary-cards">
+
+        <a href="#mobile-section" class="summary-card {{ 'has-low' if mobile_low }}">
+            <div class="icon">📱</div>
+            <h3>Mobile Stock</h3>
+            <p>{{ mobile_total }}</p>
+            {% if mobile_low %}
+                <div class="low-warning">⚠ {{ mobile_low|length }} item{{ 's' if mobile_low|length != 1 }} low</div>
+            {% endif %}
+        </a>
+
+        <a href="#laptop-section" class="summary-card {{ 'has-low' if laptop_low }}">
+            <div class="icon">💻</div>
+            <h3>Laptop Stock</h3>
+            <p>{{ laptop_total }}</p>
+            {% if laptop_low %}
+                <div class="low-warning">⚠ {{ laptop_low|length }} item{{ 's' if laptop_low|length != 1 }} low</div>
+            {% endif %}
+        </a>
+
+        <a href="#accessory-section" class="summary-card {{ 'has-low' if accessory_low }}">
+            <div class="icon">🎧</div>
+            <h3>Accessories Stock</h3>
+            <p>{{ accessory_total }}</p>
+            {% if accessory_low %}
+                <div class="low-warning">⚠ {{ accessory_low|length }} item{{ 's' if accessory_low|length != 1 }} low</div>
+            {% endif %}
+        </a>
+
+        <a href="#other-section" class="summary-card {{ 'has-low' if other_low }}">
+            <div class="icon">📦</div>
+            <h3>Other Stock</h3>
+            <p>{{ other_total }}</p>
+            {% if other_low %}
+                <div class="low-warning">⚠ {{ other_low|length }} item{{ 's' if other_low|length != 1 }} low</div>
+            {% endif %}
+        </a>
+
+    </div>
+
+
+    <div class="section" id="mobile-section">
+        <h2>📱 Mobile</h2>
+
+        {% if mobile_products %}
+        <table>
+            <thead>
+                <tr><th>Product</th><th>Brand</th><th>IMEI</th><th>Quantity</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+                {% for p in mobile_products %}
+                <tr>
+                    <td>{{ p.product_name or '-' }}</td>
+                    <td>{{ p.brand or '-' }}</td>
+                    <td>{{ p.imei or '-' }}</td>
+                    <td class="{{ 'qty-low' if p.quantity <= 2 else 'qty-ok' }}">{{ p.quantity }}</td>
+                    <td>
+                        {% if p.quantity == 0 %}
+                            <span class="badge badge-sold">Sold Out</span>
+                        {% elif p.quantity <= 2 %}
+                            <span class="badge badge-low">Low Stock</span>
+                        {% else %}
+                            <span class="badge badge-instock">In Stock</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty">No mobile stock.</div>
+        {% endif %}
+    </div>
+
+
+    <div class="section" id="laptop-section">
+        <h2>💻 Laptop</h2>
+
+        {% if laptop_products %}
+        <table>
+            <thead>
+                <tr><th>Product</th><th>Brand</th><th>Serial</th><th>Quantity</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+                {% for p in laptop_products %}
+                <tr>
+                    <td>{{ p.product_name or '-' }}</td>
+                    <td>{{ p.brand or '-' }}</td>
+                    <td>{{ p.serial_number or '-' }}</td>
+                    <td class="{{ 'qty-low' if p.quantity <= 2 else 'qty-ok' }}">{{ p.quantity }}</td>
+                    <td>
+                        {% if p.quantity == 0 %}
+                            <span class="badge badge-sold">Sold Out</span>
+                        {% elif p.quantity <= 2 %}
+                            <span class="badge badge-low">Low Stock</span>
+                        {% else %}
+                            <span class="badge badge-instock">In Stock</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty">No laptop stock.</div>
+        {% endif %}
+    </div>
+
+
+    <div class="section" id="accessory-section">
+        <h2>🎧 Accessories</h2>
+
+        {% if accessory_products %}
+        <table>
+            <thead>
+                <tr><th>Product</th><th>Brand</th><th>Quantity</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+                {% for p in accessory_products %}
+                <tr>
+                    <td>{{ p.product_name or '-' }}</td>
+                    <td>{{ p.brand or '-' }}</td>
+                    <td class="{{ 'qty-low' if p.quantity <= 2 else 'qty-ok' }}">{{ p.quantity }}</td>
+                    <td>
+                        {% if p.quantity == 0 %}
+                            <span class="badge badge-sold">Sold Out</span>
+                        {% elif p.quantity <= 2 %}
+                            <span class="badge badge-low">Low Stock</span>
+                        {% else %}
+                            <span class="badge badge-instock">In Stock</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty">No accessory stock.</div>
+        {% endif %}
+    </div>
+
+
+    <div class="section" id="other-section">
+        <h2>📦 Other</h2>
+
+        {% if other_products %}
+        <table>
+            <thead>
+                <tr><th>Product</th><th>Brand</th><th>Quantity</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+                {% for p in other_products %}
+                <tr>
+                    <td>{{ p.product_name or '-' }}</td>
+                    <td>{{ p.brand or '-' }}</td>
+                    <td class="{{ 'qty-low' if p.quantity <= 2 else 'qty-ok' }}">{{ p.quantity }}</td>
+                    <td>
+                        {% if p.quantity == 0 %}
+                            <span class="badge badge-sold">Sold Out</span>
+                        {% elif p.quantity <= 2 %}
+                            <span class="badge badge-low">Low Stock</span>
+                        {% else %}
+                            <span class="badge badge-instock">In Stock</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty">No other stock.</div>
+        {% endif %}
+    </div>
+
+</div>
+<script>
+    const starsContainer = document.getElementById("stars");
+    for (let i = 0; i < 45; i++) {
+        const star = document.createElement("div");
+        star.className = "star";
+        star.style.top = Math.random() * 100 + "vh";
+        star.style.left = Math.random() * 100 + "vw";
+        star.style.animationDelay = (Math.random() * 3) + "s";
+        starsContainer.appendChild(star);
+    }
+</script>
+</body>
+</html>

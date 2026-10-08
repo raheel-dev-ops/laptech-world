@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Item - Laptech World</title>
+
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --bg: #05070d;
+            --panel: #0f1729;
+            --panel-2: #0a1224;
+            --border: #1e2a44;
+            --accent: #38bdf8;
+            --accent-2: #2563eb;
+            --text: #e5e7eb;
+            --muted: #8ea0c4;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', Arial, sans-serif;
+            background-color: var(--bg);
+            background-image:
+                radial-gradient(circle at 15% 0%, rgba(56, 189, 248, 0.10), transparent 45%),
+                radial-gradient(circle at 85% 100%, rgba(37, 99, 235, 0.08), transparent 45%);
+            background-attachment: fixed;
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(15, 23, 41, 0.92);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            margin: 0;
+            font-size: 20px;
+            color: #7dd3fc;
+        }
+
+        .nav-link {
+            color: var(--muted);
+            text-decoration: none;
+            background: rgba(56,189,248,0.08);
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 560px;
+            margin: 50px auto;
+        }
+
+        .card {
+            background: rgba(15, 23, 41, 0.92);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .card h1 {
+            margin: 0 0 6px;
+            font-size: 22px;
+            color: #ffffff;
+        }
+
+        .card p.note {
+            margin: 0 0 24px;
+            color: var(--muted);
+            font-size: 13.5px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+        .field { margin-bottom: 18px; }
+
+        input[readonly] {
+            background: #0d1830;
+            color: var(--accent);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: var(--panel-2);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(56,189,248,0.15);
+        }
+
+        .hint {
+            display: block;
+            margin-top: 6px;
+            font-size: 11.5px;
+            color: var(--muted);
+        }
+
+        .btns {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        button, .cancel-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 9px;
+            border: none;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .save-btn {
+            background: linear-gradient(90deg, var(--accent-2), var(--accent));
+            color: #04101f;
+        }
+
+        .cancel-btn {
+            background: var(--panel-2);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <h2>Laptech World</h2>
+    <a href="{{ url_for('invoice', invoice_id=item.invoice_id) }}" class="nav-link">Back to Invoice</a>
+</div>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>Edit Item</h1>
+        <p class="note">Category: {{ item.category }}</p>
+
+        <form method="POST">
+
+            <div class="field">
+                <label>Product Name</label>
+                <input type="text" name="product_name" value="{{ item.product_name or '' }}">
+            </div>
+
+            <div class="field">
+                <label>Brand</label>
+                <input type="text" name="brand" value="{{ item.brand or '' }}">
+            </div>
+
+            {% if item.category == 'Mobile' %}
+
+            <div class="field">
+                <label>IMEI</label>
+                <input type="text" name="imei" value="{{ item.imei or '' }}" maxlength="15" inputmode="numeric">
+            </div>
+
+            {% elif item.category == 'Laptop' %}
+
+            <div class="field">
+                <label>Serial Number</label>
+                <input type="text" name="serial_number" value="{{ item.serial_number or '' }}">
+            </div>
+
+            {% endif %}
+
+            <div class="field">
+                <label>Quantity</label>
+
+                <input
+                    type="number"
+                    name="quantity"
+                    min="1"
+                    value="{{ item.quantity }}"
+                    {% if item.category in ['Mobile', 'Laptop'] %}readonly{% endif %}
+                >
+
+                {% if item.category in ['Mobile', 'Laptop'] %}
+                <span class="hint">Mobile/Laptop is always quantity 1 (individual unit).</span>
+                {% endif %}
+            </div>
+
+            <div class="field">
+                <label>Sale Price</label>
+
+                <input
+                    type="number"
+                    step="0.01"
+                    name="sale_price"
+                    value="{{ item.sale_price if item.sale_price is not none else '' }}"
+                >
+            </div>
+
+            <div class="btns">
+                <a href="{{ url_for('invoice', invoice_id=item.invoice_id) }}" class="cancel-btn">Cancel</a>
+                <button type="submit" class="save-btn">Save Changes</button>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

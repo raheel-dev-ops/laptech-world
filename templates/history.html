@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History - Laptech World</title>
+
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --bg: #05070d;
+            --panel: #0f1729;
+            --panel-2: #0a1224;
+            --border: #1e2a44;
+            --accent: #38bdf8;
+            --accent-2: #2563eb;
+            --text: #e5e7eb;
+            --muted: #8ea0c4;
+            --success: #4ade80;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', Arial, sans-serif;
+            background-color: var(--bg);
+            background-image:
+                radial-gradient(circle at 15% 0%, rgba(56, 189, 248, 0.10), transparent 45%),
+                radial-gradient(circle at 85% 100%, rgba(37, 99, 235, 0.08), transparent 45%);
+            background-attachment: fixed;
+            color: var(--text);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .star {
+            position: fixed; width: 3px; height: 3px; background: #38bdf8;
+            border-radius: 50%; opacity: 0.6; animation: twinkle 3s ease-in-out infinite;
+            z-index: 0; pointer-events: none;
+        }
+
+        @keyframes twinkle { 0%, 100% { opacity: 0.15; } 50% { opacity: 1; } }
+
+        .navbar {
+            position: sticky; top: 0; z-index: 50;
+            background: rgba(15, 23, 41, 0.92);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 30px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .navbar-brand { display: flex; align-items: center; gap: 16px; }
+
+        .navbar-brand img {
+            width: 70px; height: 70px; border-radius: 50%; object-fit: cover;
+            filter: drop-shadow(0 0 8px rgba(56,189,248,1));
+        }
+
+        .navbar-brand h2 { margin: 0; font-size: 24px; font-weight: 800; color: #7dd3fc; }
+
+        .navbar-brand small {
+            display: block; font-size: 10.5px; font-weight: 500;
+            letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
+        }
+
+        .nav-link {
+            color: var(--muted); text-decoration: none;
+            background: rgba(56,189,248,0.08);
+            border: 1px solid var(--border);
+            padding: 10px 20px; border-radius: 9px;
+            font-size: 13px; font-weight: 600;
+        }
+
+        .nav-link:hover {
+            color: #04101f;
+            background: linear-gradient(90deg, var(--accent-2), var(--accent));
+        }
+
+        .container {
+            position: relative; z-index: 1;
+            width: 95%; max-width: 1100px;
+            margin: 30px auto 50px;
+        }
+
+        .page-head h1 {
+            margin: 0; font-size: 32px; font-weight: 800; color: #38bdf8;
+            text-shadow: 0 0 20px rgba(56,189,248,0.6);
+        }
+
+        .page-head .underline {
+            width: 60px; height: 4px; border-radius: 4px;
+            margin: 12px 0 22px;
+            background: linear-gradient(90deg, var(--accent-2), var(--accent));
+        }
+
+        .filters {
+            display: flex; flex-wrap: wrap; gap: 14px;
+            margin-bottom: 22px;
+        }
+
+        .filter-box {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(15, 23, 41, 0.92);
+            border: 1px solid var(--border);
+            padding: 8px 16px; border-radius: 12px;
+        }
+
+        .filter-box label { font-size: 13px; color: var(--muted); font-weight: 600; }
+
+        .filter-box select {
+            background: var(--panel-2); color: var(--text);
+            border: 1px solid var(--accent);
+            padding: 6px 12px; border-radius: 8px;
+            font-family: inherit; font-size: 13px; cursor: pointer; outline: none;
+        }
+
+        .section {
+            background: rgba(15, 23, 41, 0.92);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 22px;
+            overflow-x: auto;
+        }
+
+        .section h2 { margin: 0 0 6px; font-size: 19px; font-weight: 700; }
+
+        .note { margin: 0 0 16px; font-size: 12.5px; color: var(--muted); }
+
+        table { width: 100%; border-collapse: collapse; min-width: 480px; }
+
+        th, td {
+            border-bottom: 1px solid var(--border);
+            padding: 12px; text-align: center; font-size: 13.5px;
+        }
+
+        th {
+            background: var(--panel-2); color: var(--accent);
+            font-size: 11.5px; text-transform: uppercase;
+        }
+
+        td:first-child, th:first-child { text-align: left; }
+
+        tbody tr:hover td { background: rgba(56,189,248,0.06); }
+
+        .total-row td {
+            font-weight: 800; color: var(--success);
+            background: rgba(56,189,248,0.06);
+            border-bottom: none;
+        }
+
+        .empty { text-align: center; padding: 24px; color: var(--muted); }
+
+    </style>
+</head>
+
+<body>
+
+<div id="stars"></div>
+
+<div class="navbar">
+
+    <div class="navbar-brand">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Laptech World">
+        <div>
+            <h2>Laptech World</h2>
+            <small>Management System</small>
+        </div>
+    </div>
+
+    <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+
+</div>
+
+<div class="container">
+
+    <div class="page-head">
+        <h1>History</h1>
+        <div class="underline"></div>
+    </div>
+
+    <div class="filters">
+
+        <div class="filter-box">
+            <label for="blockSel">Block:</label>
+            <select id="blockSel" onchange="go()">
+                {% for key, label in blocks.items() %}
+                    <option value="{{ key }}" {% if key == block %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="filter-box">
+            <label for="yearSel">Year:</label>
+            <select id="yearSel" onchange="go()">
+                {% for y in years %}
+                    <option value="{{ y }}" {% if y == year and not all_time %}selected{% endif %}>{{ y }}</option>
+                {% endfor %}
+                <option value="all" {% if all_time %}selected{% endif %}>All Time</option>
+            </select>
+        </div>
+
+    </div>
+
+    <div class="section">
+
+        <h2>{{ title }} - {% if all_time %}All Time{% else %}{{ year }}{% endif %}</h2>
+
+        {% if block == 'stock' %}
+            <p class="note">Har din ke end ka stock, aur us ki value purchase price ke hisaab se.</p>
+        {% elif block == 'dues' %}
+            <p class="note">Entry ki date ke hisaab se. Due maujooda hai (baad mein hui payments ghat chuki hain), us din ka asli due nahi.</p>
+        {% else %}
+            <p class="note">Sirf un dino ka hisaab jin mein kaam hua. Naya din upar hai.</p>
+        {% endif %}
+
+        {% if rows %}
+        <table>
+            <thead>
+                <tr>
+                    {% for c in columns %}
+                        <th>{{ c }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% if total_row %}
+                <tr class="total-row">
+                    {% for cell in total_row %}
+                        <td>{{ cell }}</td>
+                    {% endfor %}
+                </tr>
+                {% endif %}
+
+                {% for row in rows %}
+                <tr>
+                    {% for cell in row %}
+                        <td>{{ cell }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty">Is saal ka koi record nahi.</div>
+        {% endif %}
+
+    </div>
+
+</div>
+
+<script>
+
+    function go() {
+        var b = document.getElementById("blockSel").value;
+        var y = document.getElementById("yearSel").value;
+        window.location.href = "{{ url_for('history') }}?block=" + b + "&year=" + y;
+    }
+
+    const starsContainer = document.getElementById("stars");
+
+    for (let i = 0; i < 45; i++) {
+        const star = document.createElement("div");
+        star.className = "star";
+        star.style.top = Math.random() * 100 + "vh";
+        star.style.left = Math.random() * 100 + "vw";
+        star.style.animationDelay = (Math.random() * 3) + "s";
+        starsContainer.appendChild(star);
+    }
+
+</script>
+
+</body>
+</html>

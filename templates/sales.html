@@ -1,0 +1,1989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sales - Laptech World</title>
+
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --bg: #05070d;
+            --panel: #0f1729;
+            --panel-2: #0a1224;
+            --border: #1e2a44;
+            --accent: #38bdf8;
+            --accent-2: #2563eb;
+            --text: #e5e7eb;
+            --muted: #8ea0c4;
+            --danger: #f87171;
+            --success: #4ade80;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', Arial, sans-serif;
+            background-color: var(--bg);
+            background-image:
+                radial-gradient(circle at 15% 0%, rgba(56, 189, 248, 0.10), transparent 45%),
+                radial-gradient(circle at 85% 100%, rgba(37, 99, 235, 0.08), transparent 45%);
+            background-attachment: fixed;
+            color: var(--text);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ==============================
+           STARS
+        ============================== */
+
+        .star {
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            background: #38bdf8;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: twinkle 3s ease-in-out infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.15; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==============================
+           NAVBAR
+        ============================== */
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(15, 23, 41, 0.92);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.5);
+        }
+
+        .navbar::after {
+            content: "";
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), var(--accent), transparent);
+            opacity: 0.8;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .navbar-brand img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            filter: drop-shadow(0 0 8px rgba(56,189,248,1)) drop-shadow(0 0 20px rgba(37,99,235,0.9));
+        }
+
+        .navbar-brand .brand-text {
+            line-height: 1.15;
+        }
+
+        .navbar-brand h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: #7dd3fc;
+            filter: drop-shadow(0 0 14px rgba(56,189,248,0.8)) drop-shadow(0 0 26px rgba(56,189,248,0.5));
+        }
+
+        .navbar-brand small {
+            display: block;
+            font-size: 10.5px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .nav-link {
+            color: var(--muted);
+            text-decoration: none;
+            background: rgba(56,189,248,0.08);
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 0 18px rgba(56,189,248,0.25), 0 0 34px rgba(56,189,248,0.12);
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: #04101f;
+            background: linear-gradient(90deg, var(--accent-2), var(--accent));
+            border-color: var(--accent);
+            box-shadow: 0 0 22px rgba(56,189,248,0.5), 0 0 45px rgba(56,189,248,0.25);
+        }
+
+        /* ==============================
+           MAIN CONTAINER
+        ============================== */
+
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 95%;
+            max-width: 1400px;
+            margin: 30px auto 50px;
+        }
+
+        .page-head {
+            margin-bottom: 26px;
+            animation: fadeUp 0.5s ease-out both;
+        }
+
+        .page-head h1 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 800;
+            color: #38bdf8;
+            text-shadow: 0 0 20px rgba(56,189,248,0.6), 0 0 40px rgba(56,189,248,0.3);
+        }
+
+        .page-head .underline {
+            width: 60px;
+            height: 4px;
+            border-radius: 4px;
+            margin-top: 12px;
+            background: linear-gradient(90deg, var(--accent-2), var(--accent));
+            box-shadow: 0 0 12px rgba(56,189,248,0.7);
+        }
+
+        /* ==============================
+           MESSAGES
+        ============================== */
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            background: rgba(248,113,113,0.12);
+            color: var(--danger);
+            border: 1px solid rgba(248,113,113,0.3);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .message.success {
+            background: rgba(74,222,128,0.12);
+            color: var(--success);
+            border: 1px solid rgba(74,222,128,0.3);
+        }
+
+        /* ==============================
+           SECTIONS
+        ============================== */
+
+        .section {
+            position: relative;
+            background: rgba(15, 23, 41, 0.92);
+            border: 1px solid var(--border);
+            padding: 26px;
+            border-radius: 18px;
+            margin-bottom: 24px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.45), inset -40px 0 60px -40px rgba(56,189,248,0.22);
+            animation: fadeUp 0.6s ease-out both;
+        }
+
+        .section::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), var(--accent), transparent);
+            opacity: 0.7;
+        }
+
+        .section h2 {
+            margin: 0 0 20px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border);
+            font-size: 19px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .customer-section {
+            border-left: 4px solid var(--accent-2);
+        }
+
+        .customer-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .customer-header h2 {
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        .customer-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: rgba(56,189,248,0.1);
+            border: 1px solid rgba(56,189,248,0.25);
+        }
+
+        .customer-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        /* ==============================
+           FORM ELEMENTS
+        ============================== */
+
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 12px;
+            margin-bottom: 7px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 12px 13px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            background: var(--panel-2);
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        select option {
+            background: var(--panel-2);
+            color: var(--text);
+        }
+
+        input::placeholder {
+            color: #5c6b85;
+        }
+
+        select:focus,
+        input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(56,189,248,0.2);
+        }
+
+        input[readonly] {
+            background: #0d1830;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 8px;
+            align-items: end;
+        }
+
+        .form-row.has-id-field {
+            grid-template-columns: repeat(5, 1fr);
+        }
+
+        /* ==============================
+           CATEGORY BUTTONS
+        ============================== */
+
+        .category-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .category-btn {
+            width: auto;
+            border: 1px solid var(--border);
+            padding: 12px 24px;
+            border-radius: 999px;
+            cursor: pointer;
+            background: var(--panel-2);
+            color: var(--text);
+            font-weight: 600;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.25s ease;
+        }
+
+        .category-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 0 0 3px rgba(56,189,248,0.15), 0 0 22px rgba(56,189,248,0.25);
+        }
+
+        .category-btn.active {
+            background: linear-gradient(90deg, var(--accent-2), var(--accent));
+            color: #04101f;
+            border-color: transparent;
+            box-shadow: 0 6px 22px rgba(56,189,248,0.4);
+        }
+
+        .product-category {
+            display: none;
+        }
+
+        .product-category.active {
+            display: block;
+        }
+
+        /* ==============================
+           QUANTITY STEPPER
+        ============================== */
+
+        .qty-control {
+            display: flex;
+            align-items: stretch;
+        }
+
+        .qty-control input {
+            text-align: center;
+            border-radius: 0;
+            border-left: none;
+            border-right: none;
+            padding: 12px 4px;
+        }
+
+        .qty-btn {
+            width: 44px;
+            background: var(--panel-2);
+            color: var(--accent);
+            border: 1px solid var(--border);
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+            font-family: inherit;
+            transition: background 0.15s ease;
+        }
+
+        .qty-btn:first-child {
+            border-radius: 10px 0 0 10px;
+        }
+
+        .qty-btn:last-child {
+            border-radius: 0 10px 10px 0;
+        }
+
+        .qty-btn:hover {
+            background: rgba(56,189,248,0.2);
+        }
+
+        /* ==============================
+           BUTTONS
+        ============================== */
+
+        button {
+            border: none;
+            border-radius: 10px;
+            padding: 12px 18px;
+            cursor: pointer;
+            font-weight: 700;
+            font-family: inherit;
+            font-size: 13.5px;
+        }
+
+        .add-btn {
+            width: 100%;
+            background: linear-gradient(90deg, var(--accent-2), var(--accent));
+            color: #04101f;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(56,189,248,0.45);
+        }
+
+        .edit-btn {
+            background: rgba(37,99,235,0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(37,99,235,0.35);
+            transition: all 0.15s ease;
+        }
+
+        .edit-btn:hover {
+            background: rgba(37,99,235,0.3);
+        }
+
+        .view-btn {
+            background: rgba(56,189,248,0.12);
+            color: #7dd3fc;
+            border: 1px solid rgba(56,189,248,0.35);
+            transition: all 0.15s ease;
+        }
+
+        .view-btn:hover {
+            background: rgba(56,189,248,0.26);
+        }
+
+        .delete-btn {
+            background: rgba(248,113,113,0.12);
+            color: var(--danger);
+            border: 1px solid rgba(248,113,113,0.32);
+            transition: all 0.15s ease;
+        }
+
+        .delete-btn:hover {
+            background: rgba(248,113,113,0.26);
+        }
+
+        .complete-btn {
+            background: linear-gradient(90deg, #16a34a, #4ade80);
+            color: #04150b;
+            font-size: 15px;
+            padding: 14px 30px;
+            min-width: 200px;
+            box-shadow: 0 8px 22px rgba(74,222,128,0.25);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .complete-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(74,222,128,0.45);
+        }
+
+        /* ==============================
+           CART SECTION
+        ============================== */
+
+        .cart-section {
+            border-left: 4px solid var(--success);
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .cart-header h2 {
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        .cart-badge {
+            background: rgba(74,222,128,0.14);
+            color: var(--success);
+            border: 1px solid rgba(74,222,128,0.3);
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .cart-table,
+        .history-table {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .cart-table table {
+            min-width: 900px;
+        }
+
+        .history-table table {
+            min-width: 820px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border-bottom: 1px solid var(--border);
+            padding: 14px 12px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 13.5px;
+        }
+
+        th {
+            background: var(--panel-2);
+            color: var(--accent);
+            font-size: 11.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover td {
+            background: rgba(56,189,248,0.07);
+        }
+
+        .cat-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            background: rgba(56,189,248,0.12);
+            color: #7dd3fc;
+            border: 1px solid rgba(56,189,248,0.35);
+        }
+
+        .prod-name {
+            display: inline-block;
+            font-weight: 700;
+            color: #ffffff;
+            background: rgba(255,255,255,0.03);
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .invoice-no {
+            font-weight: 700;
+            color: #7dd3fc;
+        }
+
+        /* ==============================
+           EMPTY / TOTAL
+        ============================== */
+
+        .empty {
+            text-align: center;
+            padding: 28px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .total-box {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .grand-total {
+            min-width: 340px;
+            background: var(--panel-2);
+            border: 1px solid rgba(56,189,248,0.4);
+            color: #ffffff;
+            padding: 16px 24px;
+            border-radius: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 17px;
+            font-weight: 500;
+            box-shadow: 0 0 30px rgba(56,189,248,0.18);
+        }
+
+        .grand-total span:last-child {
+            color: var(--success);
+            font-size: 24px;
+            font-weight: 800;
+            text-shadow: 0 0 16px rgba(74,222,128,0.5);
+        }
+
+        .complete-sale-box {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 22px;
+        }
+
+        /* ==============================
+           ACTIONS (centered, same size)
+        ============================== */
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .actions form {
+            margin: 0;
+        }
+
+        .small-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 78px;
+            height: 36px;
+            padding: 0 14px;
+            font-size: 12.5px;
+            line-height: 1;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        /* ==============================
+           BULK DELETE BAR (Invoice History)
+        ============================== */
+
+        #bulkDeleteInvoicesBar {
+            display: none;
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 200;
+            background: rgba(15,23,41,0.97);
+            border: 1px solid rgba(248,113,113,0.4);
+            border-radius: 14px;
+            padding: 14px 22px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            align-items: center;
+            gap: 16px;
+        }
+
+        #bulkDeleteInvoicesBar span {
+            color: #fff;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        /* ==============================
+           RESPONSIVE
+        ============================== */
+
+        @media (max-width: 900px) {
+
+            .form-row,
+            .form-row.has-id-field {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .customer-box {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .navbar {
+                padding: 10px 14px;
+            }
+
+            .navbar-brand img {
+                width: 50px;
+                height: 50px;
+            }
+
+            .navbar-brand h2 {
+                font-size: 17px;
+            }
+
+            .form-row,
+            .form-row.has-id-field {
+                grid-template-columns: 1fr;
+            }
+
+            .cart-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .total-box {
+                justify-content: stretch;
+            }
+
+            .grand-total {
+                width: 100%;
+                min-width: 0;
+                font-size: 15px;
+            }
+
+            .grand-total span:last-child {
+                font-size: 20px;
+            }
+
+            .complete-btn {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+<div id="stars"></div>
+
+<div class="navbar">
+
+    <div class="navbar-brand">
+
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Laptech World">
+
+        <div class="brand-text">
+            <h2>Laptech World</h2>
+            <small>Management System</small>
+        </div>
+
+    </div>
+
+    <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+
+</div>
+
+
+<div class="container">
+
+    <div class="page-head">
+        <h1>Sales</h1>
+        <div class="underline"></div>
+    </div>
+
+
+    {% if error %}
+
+    <div class="message">
+        {{ error }}
+    </div>
+
+    {% endif %}
+
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% if messages %}
+
+            {% for category, message in messages %}
+
+                <div class="message {% if category == 'success' %}success{% endif %}">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <!-- CUSTOMER DETAILS -->
+
+    <div class="section customer-section">
+
+        <div class="customer-header">
+
+            <span class="customer-icon">👤</span>
+
+            <h2>Customer Details</h2>
+
+        </div>
+
+
+        <form
+            method="POST"
+            id="completeSaleForm"
+            onsubmit="return validateSale();"
+        >
+
+            <input type="hidden" name="action" value="complete_sale">
+
+            <div class="customer-box">
+
+                <div class="form-group">
+
+                    <label>Customer Name</label>
+
+                    <input
+                        type="text"
+                        name="customer_name"
+                        id="customer_name"
+                        placeholder="Enter customer name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Customer Phone</label>
+
+                    <input
+                        type="text"
+                        name="customer_phone"
+                        id="customer_phone"
+                        placeholder="Enter customer phone"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+            <div class="form-group" style="margin-top:18px; max-width:320px;">
+
+                <label>Amount Paid (Optional)</label>
+
+                <input
+                    type="number"
+                    step="0.01"
+                    name="amount_paid"
+                    id="amount_paid"
+                    placeholder="Khali chhorein agar poora paid hai"
+                >
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- ADD PRODUCT TO CART -->
+
+    <div class="section">
+
+        <h2>Add Product to Cart</h2>
+
+
+        <div class="category-buttons">
+
+            <button type="button" class="category-btn active" onclick="showCategory('mobile', this)">📱 Mobile</button>
+
+            <button type="button" class="category-btn" onclick="showCategory('laptop', this)">💻 Laptop</button>
+
+            <button type="button" class="category-btn" onclick="showCategory('accessories', this)">🎧 Accessories</button>
+
+            <button type="button" class="category-btn" onclick="showCategory('other', this)">📦 Other</button>
+
+        </div>
+
+
+        <!-- MOBILE -->
+
+        <div id="mobile" class="product-category active">
+
+            <form method="POST">
+
+                <input type="hidden" name="action" value="add_to_cart">
+
+                <div class="form-row has-id-field">
+
+                    <div class="form-group">
+
+                        <label>Mobile Product</label>
+
+                        <select
+                            name="product_id"
+                            required
+                            onchange="updateProductDetails(this, 'mobile')"
+                        >
+
+                            <option value="">-- Select Mobile --</option>
+
+                            {% for product in mobile_products %}
+
+                            <option
+                                value="{{ product.id }}"
+                                data-price="{{ product.sale_price if product.sale_price is not none else '' }}"
+                                data-imei="{{ product.imei or '' }}"
+                                data-stock="{{ product.quantity }}"
+                            >
+
+                                {% if product.brand and product.brand.lower() not in (product.product_name or '').lower() %}
+                                    {{ product.brand }}
+                                {% endif %}
+
+                                {% if product.product_name %}
+                                    {{ product.product_name }}
+                                {% endif %}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+    <label>Search IMEI</label>
+
+    <div style="display: flex; gap: 8px;">
+        <input
+            type="text"
+            id="mobile_imei_search"
+            placeholder="Enter IMEI 1 or IMEI 2"
+            maxlength="15"
+            inputmode="numeric"
+            onkeydown="if (event.key === 'Enter') { event.preventDefault(); searchStockIdentifier('mobile'); }"
+        >
+
+        <button
+            type="button"
+            class="add-btn"
+            onclick="searchStockIdentifier('mobile')"
+        >
+            Search
+        </button>
+    </div>
+
+    <small id="mobile_search_result"></small>
+</div>
+
+<div class="form-group">
+    <label>IMEI 1</label>
+
+    <input
+        type="text"
+        name="imei"
+        id="mobile_imei"
+        placeholder="Select a mobile"
+        readonly
+    >
+</div>
+
+<div class="form-group">
+    <label>IMEI 2</label>
+
+    <input
+        type="text"
+        id="mobile_imei2"
+        placeholder="Select a mobile"
+        readonly
+    >
+</div>
+
+                    <div class="form-group">
+
+                        <label>Sale Price</label>
+
+                        <input
+                            type="number"
+                            step="0.01"
+                            name="sale_price"
+                            id="mobile_sale_price"
+                            placeholder="Sale Price"
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Quantity</label>
+
+                        <div class="qty-control">
+
+                            <button type="button" class="qty-btn" onclick="stepQty('mobile_quantity', -1)">−</button>
+
+                            <input type="number" name="quantity" id="mobile_quantity" value="1" min="1">
+
+                            <button type="button" class="qty-btn" onclick="stepQty('mobile_quantity', 1)">+</button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <button type="submit" class="add-btn">+ Add to Cart</button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <!-- LAPTOP -->
+
+        <div id="laptop" class="product-category">
+
+            <form method="POST">
+
+                <input type="hidden" name="action" value="add_to_cart">
+
+                <div class="form-row has-id-field">
+
+                    <div class="form-group">
+
+                        <label>Laptop Product</label>
+
+                        <select
+                            name="product_id"
+                            required
+                            onchange="updateProductDetails(this, 'laptop')"
+                        >
+
+                            <option value="">-- Select Laptop --</option>
+
+                            {% for product in laptop_products %}
+
+                            <option
+                                value="{{ product.id }}"
+                                data-price="{{ product.sale_price if product.sale_price is not none else '' }}"
+                                data-serial="{{ product.serial_number or '' }}"
+                                data-stock="{{ product.quantity }}"
+                            >
+
+                                {% if product.brand and product.brand.lower() not in (product.product_name or '').lower() %}
+                                    {{ product.brand }}
+                                {% endif %}
+
+                                {% if product.product_name %}
+                                    {{ product.product_name }}
+                                {% endif %}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+    <label>Search Serial Number</label>
+
+    <div style="display: flex; gap: 8px;">
+        <input
+            type="text"
+            id="laptop_serial_search"
+            placeholder="Enter Serial Number"
+            onkeydown="if (event.key === 'Enter') { event.preventDefault(); searchStockIdentifier('laptop'); }"
+        >
+
+        <button
+            type="button"
+            class="add-btn"
+            onclick="searchStockIdentifier('laptop')"
+        >
+            Search
+        </button>
+    </div>
+
+    <small id="laptop_search_result"></small>
+</div>
+
+<div class="form-group">
+    <label>Serial Number</label>
+
+    <input
+        type="text"
+        name="serial_number"
+        id="laptop_serial"
+        placeholder="Select a laptop"
+        readonly
+    >
+</div>
+
+                    <div class="form-group">
+
+                        <label>Sale Price</label>
+
+                        <input
+                            type="number"
+                            step="0.01"
+                            name="sale_price"
+                            id="laptop_sale_price"
+                            placeholder="Sale Price"
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Quantity</label>
+
+                        <div class="qty-control">
+
+                            <button type="button" class="qty-btn" onclick="stepQty('laptop_quantity', -1)">−</button>
+
+                            <input type="number" name="quantity" id="laptop_quantity" value="1" min="1">
+
+                            <button type="button" class="qty-btn" onclick="stepQty('laptop_quantity', 1)">+</button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <button type="submit" class="add-btn">+ Add to Cart</button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <!-- ACCESSORIES -->
+
+        <div id="accessories" class="product-category">
+
+            <form method="POST">
+
+                <input type="hidden" name="action" value="add_to_cart">
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>Accessory</label>
+
+                        <select
+                            name="product_id"
+                            required
+                            onchange="updateProductDetails(this, 'accessory')"
+                        >
+
+                            <option value="">-- Select Accessory --</option>
+
+                            {% for product in accessory_products %}
+
+                            <option
+                                value="{{ product.id }}"
+                                data-price="{{ product.sale_price if product.sale_price is not none else '' }}"
+                                data-stock="{{ product.quantity }}"
+                            >
+
+                                {% if product.brand and product.brand.lower() not in (product.product_name or '').lower() %}
+                                    {{ product.brand }}
+                                {% endif %}
+
+                                {% if product.product_name %}
+                                    {{ product.product_name }}
+                                {% endif %}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Sale Price</label>
+
+                        <input
+                            type="number"
+                            step="0.01"
+                            name="sale_price"
+                            id="accessory_sale_price"
+                            placeholder="Sale Price"
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Quantity</label>
+
+                        <div class="qty-control">
+
+                            <button type="button" class="qty-btn" onclick="stepQty('accessory_quantity', -1)">−</button>
+
+                            <input type="number" name="quantity" id="accessory_quantity" value="1" min="1">
+
+                            <button type="button" class="qty-btn" onclick="stepQty('accessory_quantity', 1)">+</button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <button type="submit" class="add-btn">+ Add to Cart</button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <!-- OTHER -->
+
+        <div id="other" class="product-category">
+
+            <form method="POST">
+
+                <input type="hidden" name="action" value="add_to_cart">
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>Other Product</label>
+
+                        <select
+                            name="product_id"
+                            required
+                            onchange="updateProductDetails(this, 'other')"
+                        >
+
+                            <option value="">-- Select Other Product --</option>
+
+                            {% for product in other_products %}
+
+                            <option
+                                value="{{ product.id }}"
+                                data-price="{{ product.sale_price if product.sale_price is not none else '' }}"
+                                data-stock="{{ product.quantity }}"
+                            >
+
+                                {% if product.brand and product.brand.lower() not in (product.product_name or '').lower() %}
+                                    {{ product.brand }}
+                                {% endif %}
+
+                                {% if product.product_name %}
+                                    {{ product.product_name }}
+                                {% endif %}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Sale Price</label>
+
+                        <input
+                            type="number"
+                            step="0.01"
+                            name="sale_price"
+                            id="other_sale_price"
+                            placeholder="Sale Price"
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Quantity</label>
+
+                        <div class="qty-control">
+
+                            <button type="button" class="qty-btn" onclick="stepQty('other_quantity', -1)">−</button>
+
+                            <input type="number" name="quantity" id="other_quantity" value="1" min="1">
+
+                            <button type="button" class="qty-btn" onclick="stepQty('other_quantity', 1)">+</button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <button type="submit" class="add-btn">+ Add to Cart</button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- CURRENT CART -->
+
+    <div class="section cart-section">
+
+        <div class="cart-header">
+
+            <h2>🛒 Current Cart</h2>
+
+            {% if cart %}
+
+                <span class="cart-badge">
+                    {{ cart|length }} Item{% if cart|length != 1 %}s{% endif %}
+                </span>
+
+            {% endif %}
+
+        </div>
+
+
+        {% if cart %}
+
+        <div class="cart-table">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Category</th>
+                        <th>Product</th>
+                        <th>Brand</th>
+                        <th>IMEI / Serial</th>
+                        <th>Qty</th>
+                        <th>Sale Price</th>
+                        <th>Total</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% set grand_total = namespace(value=0) %}
+
+                    {% for item in cart %}
+
+                    {% set sale_price = item.sale_price or 0 %}
+                    {% set item_total = sale_price * item.quantity %}
+                    {% set grand_total.value = grand_total.value + item_total %}
+
+                    <tr>
+
+                        <td>{{ loop.index }}</td>
+                        <td><span class="cat-badge">{{ item.category or "-" }}</span></td>
+                        <td><span class="prod-name">{{ item.product_name or "-" }}</span></td>
+                        <td>{{ item.brand or "-" }}</td>
+
+                        <td>
+                            {% if item.imei %}
+                                IMEI: {{ item.imei }}
+                            {% elif item.serial_number %}
+                                Serial: {{ item.serial_number }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+
+                        <td>{{ item.quantity }}</td>
+
+                        <td>
+                            {% if item.sale_price is not none %}
+                                Rs. {{ "%.2f"|format(item.sale_price) }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+
+                        <td>Rs. {{ "%.2f"|format(item_total) }}</td>
+
+                        <td>
+
+                            <div class="actions">
+
+                                <form method="POST">
+
+                                    <input type="hidden" name="action" value="edit_cart">
+                                    <input type="hidden" name="index" value="{{ loop.index0 }}">
+                                    <input type="hidden" name="quantity" value="{{ item.quantity }}">
+                                    <input type="hidden" name="sale_price" value="{{ item.sale_price if item.sale_price is not none else '' }}">
+
+                                    <button type="submit" class="edit-btn small-btn">Edit</button>
+
+                                </form>
+
+                                <form method="POST">
+
+                                    <input type="hidden" name="action" value="remove_cart">
+                                    <input type="hidden" name="index" value="{{ loop.index0 }}">
+
+                                    <button type="submit" class="delete-btn small-btn">Delete</button>
+
+                                </form>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div class="total-box">
+
+            <div class="grand-total">
+                <span>Grand Total</span>
+                <span>Rs. {{ "%.2f"|format(grand_total.value) }}</span>
+            </div>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty">Cart is empty.</div>
+
+        {% endif %}
+
+
+        <div class="complete-sale-box">
+
+            <button type="submit" form="completeSaleForm" class="complete-btn">
+                ✔ Complete Sale
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- INVOICE HISTORY -->
+
+    <div class="section">
+
+        <h2>🧾 Invoice History</h2>
+
+        <div class="history-table">
+
+            {% if invoices %}
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th style="width:36px;"><input type="checkbox" onclick="toggleInvoiceCheckboxes(this)"></th>
+                        <th>ID</th>
+                        <th>Invoice #</th>
+                        <th>Customer</th>
+                        <th>Phone</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for invoice in invoices %}
+
+                    <tr>
+
+                        <td><input type="checkbox" class="invoice-checkbox" value="{{ invoice.id }}" onclick="updateInvoiceBulkBar()"></td>
+
+                        <td>{{ loop.index }}</td>
+                        <td class="invoice-no">{{ invoice.invoice_number }}</td>
+                        <td>{{ invoice.customer_name or "-" }}</td>
+                        <td>{{ invoice.customer_phone or "-" }}</td>
+                        <td>{{ invoice.invoice_date.strftime("%d-%m-%Y %I:%M %p") }}</td>
+
+                        <td>
+
+                            <div class="actions">
+
+                                <a href="{{ url_for('invoice', invoice_id=invoice.id) }}" class="view-btn small-btn">View</a>
+
+                                <a href="{{ url_for('edit_sale', sale_id=invoice.id) }}" class="edit-btn small-btn">Edit</a>
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for('delete_invoice', invoice_id=invoice.id) }}"
+                                   onsubmit="return confirm('Ye invoice Trash mein chali jayegi. Wahan se restore kar sakte hain. Delete karein?');"
+                                >
+
+                                    <button type="submit" class="delete-btn small-btn">Delete</button>
+
+                                </form>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="empty">No invoices found.</div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- Floating bulk delete bar for invoices -->
+    <div id="bulkDeleteInvoicesBar">
+        <span id="bulkDeleteInvoiceCount"></span>
+        <button type="button" class="delete-btn" style="border:none; cursor:pointer;" onclick="bulkDeleteInvoices()">Delete Selected</button>
+    </div>
+
+    <form method="POST" action="{{ url_for('bulk_delete_invoices') }}" id="bulkDeleteInvoicesForm" style="display:none;">
+        <input type="hidden" name="invoice_ids" id="bulkDeleteInvoiceIds">
+    </form>
+
+
+</div>
+
+
+<script>
+
+// Background stars
+(function() {
+    const starsContainer = document.getElementById("stars");
+    for (let i = 0; i < 45; i++) {
+        const star = document.createElement("div");
+        star.className = "star";
+        star.style.top = Math.random() * 100 + "vh";
+        star.style.left = Math.random() * 100 + "vw";
+        star.style.animationDelay = (Math.random() * 3) + "s";
+        starsContainer.appendChild(star);
+    }
+})();
+
+
+function showCategory(category, button) {
+
+    const categories = document.querySelectorAll(".product-category");
+
+    categories.forEach(function(categoryBox) {
+        categoryBox.classList.remove("active");
+    });
+
+    const selected = document.getElementById(category);
+
+    if (selected) {
+        selected.classList.add("active");
+    }
+
+    const buttons = document.querySelectorAll(".category-btn");
+
+    buttons.forEach(function(btn) {
+        btn.classList.remove("active");
+    });
+
+    if (button) {
+        button.classList.add("active");
+    }
+
+}
+
+
+function updateProductDetails(selectElement, type) {
+
+    const option = selectElement.options[selectElement.selectedIndex];
+
+    if (!option) {
+        return;
+    }
+
+    const form = selectElement.closest("form");
+
+    if (!form) {
+        return;
+    }
+
+    const price = option.getAttribute("data-price");
+    const priceInput = form.querySelector('input[name="sale_price"]');
+
+    if (priceInput) {
+        priceInput.value = price || "";
+    }
+
+    const stock = option.getAttribute("data-stock");
+    const qtyInput = form.querySelector('input[name="quantity"]');
+
+    if (qtyInput) {
+
+        qtyInput.value = 1;
+
+        if (stock) {
+            qtyInput.setAttribute("max", stock);
+        } else {
+            qtyInput.removeAttribute("max");
+        }
+
+    }
+
+    if (type === "mobile") {
+
+        const imei = option.getAttribute("data-imei");
+        const imeiInput = document.getElementById("mobile_imei");
+
+        if (imeiInput) {
+            imeiInput.value = imei || "";
+        }
+
+    }
+
+    if (type === "laptop") {
+
+        const serial = option.getAttribute("data-serial");
+        const serialInput = document.getElementById("laptop_serial");
+
+        if (serialInput) {
+            serialInput.value = serial || "";
+        }
+
+    }
+
+}
+
+
+function stepQty(inputId, delta) {
+
+    const input = document.getElementById(inputId);
+
+    if (!input) {
+        return;
+    }
+
+    let value = parseInt(input.value || "1", 10) + delta;
+
+    if (isNaN(value) || value < 1) {
+        value = 1;
+    }
+
+    const max = input.getAttribute("max");
+
+    if (max && value > parseInt(max, 10)) {
+        value = parseInt(max, 10);
+    }
+
+    input.value = value;
+
+}
+
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    const nameInput = document.getElementById("customer_name");
+    const phoneInput = document.getElementById("customer_phone");
+
+    const saleWasCompleted =
+        document.querySelector(".message.success") !== null;
+
+    if (saleWasCompleted) {
+
+        sessionStorage.removeItem("sale_customer_name");
+        sessionStorage.removeItem("sale_customer_phone");
+
+    } else {
+
+        const savedName = sessionStorage.getItem("sale_customer_name");
+        const savedPhone = sessionStorage.getItem("sale_customer_phone");
+
+        if (nameInput && savedName) {
+            nameInput.value = savedName;
+        }
+
+        if (phoneInput && savedPhone) {
+            phoneInput.value = savedPhone;
+        }
+
+    }
+
+    if (nameInput) {
+
+        nameInput.addEventListener("input", function() {
+            sessionStorage.setItem("sale_customer_name", nameInput.value);
+        });
+
+    }
+
+    if (phoneInput) {
+
+        phoneInput.addEventListener("input", function() {
+            sessionStorage.setItem("sale_customer_phone", phoneInput.value);
+        });
+
+    }
+
+});
+
+
+function validateSale() {
+
+    const cartExists = {{ "true" if cart else "false" }};
+
+    if (!cartExists) {
+        alert("Cart is empty. Please add a product first.");
+        return false;
+    }
+
+    const customerName = document.getElementById("customer_name").value.trim();
+    const customerPhone = document.getElementById("customer_phone").value.trim();
+
+    if (!customerName) {
+        alert("Please enter customer name.");
+        return false;
+    }
+
+    if (!customerPhone) {
+        alert("Please enter customer phone.");
+        return false;
+    }
+
+    return true;
+
+}
+
+
+// =====================================================
+// BULK SELECT / DELETE INVOICES
+// =====================================================
+
+function toggleInvoiceCheckboxes(masterCheckbox) {
+
+    const checkboxes = document.querySelectorAll(".invoice-checkbox");
+
+    checkboxes.forEach(function(cb) {
+        cb.checked = masterCheckbox.checked;
+    });
+
+    updateInvoiceBulkBar();
+
+}
+
+
+function updateInvoiceBulkBar() {
+
+    const checked = document.querySelectorAll(".invoice-checkbox:checked");
+
+    const bar = document.getElementById("bulkDeleteInvoicesBar");
+
+    const count = document.getElementById("bulkDeleteInvoiceCount");
+
+    if (checked.length > 0) {
+
+        bar.style.display = "flex";
+        count.textContent = checked.length + " invoice(s) selected";
+
+    } else {
+
+        bar.style.display = "none";
+
+    }
+
+}
+
+
+function bulkDeleteInvoices() {
+
+    const checked = document.querySelectorAll(".invoice-checkbox:checked");
+
+    if (checked.length === 0) {
+        return;
+    }
+
+    const ids = Array.from(checked).map(function(cb) { return cb.value; }).join(",");
+
+    if (!confirm("Selected " + checked.length + " invoice(s) ko Trash mein bhej dein?")) {
+        return;
+    }
+
+    document.getElementById("bulkDeleteInvoiceIds").value = ids;
+
+    document.getElementById("bulkDeleteInvoicesForm").submit();
+
+}
+async function searchStockIdentifier(type) {
+    const searchInput = document.getElementById(
+        type === "mobile"
+            ? "mobile_imei_search"
+            : "laptop_serial_search"
+    );
+
+    const result = document.getElementById(
+        type === "mobile"
+            ? "mobile_search_result"
+            : "laptop_search_result"
+    );
+
+    if (!searchInput || !result) {
+        return;
+    }
+
+    const identifier = searchInput.value.trim();
+
+    if (!identifier) {
+        result.textContent =
+            type === "mobile"
+                ? "Please enter an IMEI."
+                : "Please enter a Serial Number.";
+        return;
+    }
+
+    result.textContent = "Searching...";
+
+    try {
+        const response = await fetch(
+            `/search_stock_identifier?identifier=${encodeURIComponent(identifier)}`
+        );
+
+        const data = await response.json();
+
+        if (!data.found) {
+            result.textContent =
+                data.message || "No matching stock found.";
+            return;
+        }
+
+        if (
+            (type === "mobile" && data.category !== "Mobile") ||
+            (type === "laptop" && data.category !== "Laptop")
+        ) {
+            result.textContent =
+                "This identifier belongs to a " + data.category + ".";
+            return;
+        }
+
+        const productSelect = document.querySelector(
+            type === "mobile"
+                ? '#mobile select[name="product_id"]'
+                : '#laptop select[name="product_id"]'
+        );
+
+        if (productSelect) {
+            productSelect.value = String(data.product_id);
+
+            updateProductDetails(
+                productSelect,
+                type
+            );
+        }
+
+        if (type === "mobile") {
+            const imei1Input =
+                document.getElementById("mobile_imei");
+
+            if (imei1Input) {
+                imei1Input.value = data.imei || "";
+            }
+
+            const imei2Input =
+                document.getElementById("mobile_imei2");
+
+            if (imei2Input) {
+                imei2Input.value = data.imei2 || "";
+            }
+        }
+
+        if (type === "laptop") {
+            const serialInput =
+                document.getElementById("laptop_serial");
+
+            if (serialInput) {
+                serialInput.value =
+                    data.serial_number || "";
+            }
+        }
+
+        const priceInput = document.getElementById(
+            type === "mobile"
+                ? "mobile_sale_price"
+                : "laptop_sale_price"
+        );
+
+        if (priceInput) {
+            priceInput.value =
+                data.sale_price ?? "";
+        }
+
+        result.textContent =
+            type === "mobile"
+                ? "Mobile found successfully."
+                : "Laptop found successfully.";
+
+    } catch (error) {
+        console.error(error);
+        result.textContent =
+            "Search failed. Please try again.";
+    }
+}
+</script>
+
+
+</body>
+</html>

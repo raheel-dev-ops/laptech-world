@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Edit Sale - Laptech World</title>
+
+```
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+
+<style>
+    .edit-form {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .edit-form input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .edit-form button {
+        grid-column: 1 / -1;
+        background: #222;
+        color: white;
+        border-radius: 5px;
+    }
+
+    .product-info {
+        grid-column: 1 / -1;
+        background: #f1f3f6;
+        padding: 15px;
+        border-radius: 5px;
+        line-height: 1.8;
+    }
+
+    .back-btn {
+        display: inline-block;
+        margin-top: 15px;
+        text-decoration: none;
+        color: #0066cc;
+        font-weight: bold;
+    }
+
+    .readonly {
+        background: #eee;
+    }
+
+    @media (max-width: 768px) {
+        .edit-form {
+            grid-template-columns: 1fr;
+        }
+
+        .edit-form button {
+            grid-column: 1;
+        }
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+```
+<h2>Laptech World</h2>
+
+<div>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/products">Products</a>
+    <a href="/sales">Sales</a>
+    <a href="/logout">Logout</a>
+</div>
+```
+
+</div>
+
+<div class="container">
+
+```
+<h1>✏️ Edit Sale</h1>
+
+
+<div class="card">
+
+    <h2>Update Sale Information</h2>
+
+
+    <form method="POST"
+          class="edit-form">
+
+
+        <div class="product-info">
+
+            <strong>Category:</strong>
+            {{ sale.category }}
+
+            &nbsp;&nbsp; | &nbsp;&nbsp;
+
+            <strong>Product:</strong>
+            {{ sale.brand }}
+            {{ sale.product_name }}
+
+            <br>
+
+            {% if sale.imei %}
+
+                <strong>IMEI:</strong>
+                {{ sale.imei }}
+
+            {% elif sale.serial_number %}
+
+                <strong>Serial Number:</strong>
+                {{ sale.serial_number }}
+
+            {% else %}
+
+                <strong>Product Type:</strong>
+                Quantity Based
+
+            {% endif %}
+
+        </div>
+
+
+        <input type="text"
+               name="customer_name"
+               value="{{ sale.customer_name }}"
+               placeholder="Customer Name"
+               required>
+
+
+        <input type="text"
+               name="customer_phone"
+               value="{{ sale.customer_phone }}"
+               placeholder="Customer Phone"
+               required>
+
+
+        <input type="number"
+               name="sale_price"
+               value="{{ sale.sale_price }}"
+               placeholder="Sale Price"
+               min="0"
+               step="0.01"
+               required>
+
+
+        <input type="date"
+               name="sale_date"
+               value="{{ sale.sale_date }}"
+               required>
+
+
+        <input type="number"
+               value="{{ sale.purchase_price }}"
+               placeholder="Purchase Price"
+               class="readonly"
+               readonly
+               title="Purchase price cannot be changed from sales page">
+
+
+        <input type="number"
+               value="{{ sale.quantity }}"
+               placeholder="Quantity"
+               class="readonly"
+               readonly>
+
+
+        <button type="submit">
+            💾 Update Sale
+        </button>
+
+    </form>
+
+
+    <a href="/sales"
+       class="back-btn">
+        ← Back to Sales
+    </a>
+
+</div>
+```
+
+</div>
+
+</body>
+</html>

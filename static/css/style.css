@@ -1,0 +1,197 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f6fa;
+}
+
+.login-box {
+    width: 350px;
+    max-width: 90%;
+    margin: 100px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.login-box input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    cursor: pointer;
+}
+
+.error {
+    color: red;
+}
+
+.navbar {
+    background: #222;
+    color: white;
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin-left: 15px;
+}
+
+.container {
+    padding: 25px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+
+/* =========================
+   PRODUCTS FORM
+========================= */
+
+.card form {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.card form input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.card form button {
+    grid-column: 1 / -1;
+    background: #222;
+    color: white;
+    border-radius: 5px;
+}
+
+
+/* =========================
+   PRODUCTS TABLE
+========================= */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    table-layout: fixed;
+}
+
+th,
+td {
+    padding: 12px 8px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    word-wrap: break-word;
+}
+
+th {
+    background: #222;
+    color: white;
+}
+
+td a {
+    color: red;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+
+/* Column widths */
+
+th:nth-child(1),
+td:nth-child(1) {
+    width: 16%;
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+    width: 12%;
+}
+
+th:nth-child(3),
+td:nth-child(3) {
+    width: 18%;
+}
+
+th:nth-child(4),
+td:nth-child(4) {
+    width: 13%;
+}
+
+th:nth-child(5),
+td:nth-child(5) {
+    width: 13%;
+}
+
+th:nth-child(6),
+td:nth-child(6) {
+    width: 10%;
+}
+
+th:nth-child(7),
+td:nth-child(7) {
+    width: 18%;
+}
+
+
+/* =========================
+   MOBILE SCREEN
+========================= */
+
+@media (max-width: 768px) {
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .navbar {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .card form {
+        grid-template-columns: 1fr;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    th,
+    td {
+        padding: 8px 4px;
+    }
+
+    .container {
+        padding: 15px;
+        overflow-x: auto;
+    }
+}

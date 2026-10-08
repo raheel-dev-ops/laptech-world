@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customers - Laptech World</title>
+
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --bg: #05070d;
+            --panel: #0f1729;
+            --panel-2: #0a1224;
+            --border: #1e2a44;
+            --accent: #38bdf8;
+            --accent-2: #2563eb;
+            --text: #e5e7eb;
+            --muted: #8ea0c4;
+            --success: #4ade80;
+            --danger: #f87171;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', Arial, sans-serif;
+            background-color: var(--bg);
+            background-image:
+                radial-gradient(circle at 15% 0%, rgba(56, 189, 248, 0.10), transparent 45%),
+                radial-gradient(circle at 85% 100%, rgba(37, 99, 235, 0.08), transparent 45%);
+            background-attachment: fixed;
+            color: var(--text);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .star {
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            background: #38bdf8;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: twinkle 3s ease-in-out infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.15; }
+            50% { opacity: 1; }
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(15, 23, 41, 0.92);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .navbar-brand img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            filter: drop-shadow(0 0 8px rgba(56,189,248,1)) drop-shadow(0 0 20px rgba(37,99,235,0.9));
+        }
+
+        .navbar-brand h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+            color: #7dd3fc;
+            filter: drop-shadow(0 0 14px rgba(56,189,248,0.8));
+        }
+
+        .navbar-brand small {
+            display: block;
+            font-size: 10.5px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .nav-link {
+            color: var(--muted);
+            text-decoration: none;
+            background: rgba(56,189,248,0.08);
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: #04101f;
+            background: linear-gradient(90deg, var(--accent-2), var(--accent));
+            border-color: var(--accent);
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1400px;
+            margin: 30px auto 50px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-head h1 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 800;
+            color: #38bdf8;
+            text-shadow: 0 0 20px rgba(56,189,248,0.6);
+        }
+
+        .page-head .underline {
+            width: 60px;
+            height: 4px;
+            border-radius: 4px;
+            margin: 12px 0 26px;
+            background: linear-gradient(90deg, var(--accent-2), var(--accent));
+            box-shadow: 0 0 12px rgba(56,189,248,0.7);
+        }
+
+        .search-box {
+            margin-bottom: 26px;
+        }
+
+        .search-box input {
+            width: 100%;
+            max-width: 380px;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--panel-2);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-box input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(56,189,248,0.15);
+        }
+
+        .group-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 0 14px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .group-title.pending {
+            color: #f87171;
+        }
+
+        .group-title.paid {
+            color: #4ade80;
+        }
+
+        .group-count {
+            font-size: 12.5px;
+            font-weight: 700;
+            padding: 3px 12px;
+            border-radius: 999px;
+        }
+
+        .group-count.pending {
+            background: rgba(248,113,113,0.14);
+            color: #f87171;
+            border: 1px solid rgba(248,113,113,0.3);
+        }
+
+        .group-count.paid {
+            background: rgba(74,222,128,0.14);
+            color: #4ade80;
+            border: 1px solid rgba(74,222,128,0.3);
+        }
+
+        .section {
+            background: rgba(15, 23, 41, 0.92);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 10px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.45);
+            overflow-x: auto;
+            margin-bottom: 28px;
+        }
+
+        .section.pending-section {
+            border-left: 4px solid var(--danger);
+        }
+
+        .section.paid-section {
+            border-left: 4px solid var(--success);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 880px;
+        }
+
+        th, td {
+            border-bottom: 1px solid var(--border);
+            padding: 14px 14px;
+            text-align: center;
+            font-size: 13.5px;
+        }
+
+        th {
+            background: var(--panel-2);
+            color: var(--accent);
+            font-size: 11.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr:hover td {
+            background: rgba(56,189,248,0.06);
+        }
+
+        .cust-name {
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .money {
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .outstanding-due {
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        .outstanding-clear {
+            color: var(--success);
+        }
+
+        .view-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 700;
+            text-decoration: none;
+            background: rgba(56,189,248,0.12);
+            color: #7dd3fc;
+            border: 1px solid rgba(56,189,248,0.35);
+        }
+
+        .view-btn:hover {
+            background: rgba(56,189,248,0.26);
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: var(--muted);
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div id="stars"></div>
+
+<div class="navbar">
+
+    <div class="navbar-brand">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Laptech World">
+        <div>
+            <h2>Laptech World</h2>
+            <small>Management System</small>
+        </div>
+    </div>
+
+    <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+
+</div>
+
+
+<div class="container">
+
+    <div class="page-head">
+        <h1>Customers</h1>
+        <div class="underline"></div>
+    </div>
+
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search by name or phone..." onkeyup="filterTables()">
+    </div>
+
+
+    <!-- PENDING PAYMENT CUSTOMERS -->
+
+    <div class="group-title pending">
+        ⚠️ Pending Payment
+        <span class="group-count pending">{{ pending_customers|length }}</span>
+    </div>
+
+    <div class="section pending-section">
+
+        {% if pending_customers %}
+
+        <table class="customerTable">
+
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Phone</th>
+                    <th>Total Orders</th>
+                    <th>Total Spent</th>
+                    <th>Outstanding</th>
+                    <th>Last Purchase</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for c in pending_customers %}
+
+                <tr class="cust-row">
+                    <td class="cust-name">{{ c.name }}</td>
+                    <td>{{ c.phone }}</td>
+                    <td>{{ c.orders }}</td>
+                    <td class="money">Rs. {{ "%.2f"|format(c.total_spent) }}</td>
+                    <td class="outstanding-due">Rs. {{ "%.2f"|format(c.outstanding) }}</td>
+                    <td>{{ c.last_purchase.strftime('%d-%m-%Y') if c.last_purchase else '-' }}</td>
+                    <td>
+                        <a class="view-btn" href="{{ url_for('customer_history', phone=c.phone if c.phone != '-' else '', name=c.name) }}">
+                            View History
+                        </a>
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% else %}
+
+        <div class="empty">Koi pending payment nahi — sab customers ne poora paid kar diya hai 🎉</div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- FULLY PAID CUSTOMERS -->
+
+    <div class="group-title paid">
+        ✅ Fully Paid
+        <span class="group-count paid">{{ paid_customers|length }}</span>
+    </div>
+
+    <div class="section paid-section">
+
+        {% if paid_customers %}
+
+        <table class="customerTable">
+
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Phone</th>
+                    <th>Total Orders</th>
+                    <th>Total Spent</th>
+                    <th>Outstanding</th>
+                    <th>Last Purchase</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for c in paid_customers %}
+
+                <tr class="cust-row">
+                    <td class="cust-name">{{ c.name }}</td>
+                    <td>{{ c.phone }}</td>
+                    <td>{{ c.orders }}</td>
+                    <td class="money">Rs. {{ "%.2f"|format(c.total_spent) }}</td>
+                    <td class="outstanding-clear">Rs. 0.00</td>
+                    <td>{{ c.last_purchase.strftime('%d-%m-%Y') if c.last_purchase else '-' }}</td>
+                    <td>
+                        <a class="view-btn" href="{{ url_for('customer_history', phone=c.phone if c.phone != '-' else '', name=c.name) }}">
+                            View History
+                        </a>
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% else %}
+
+        <div class="empty">Abhi koi fully-paid customer nahi hai.</div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+<script>
+
+    const starsContainer = document.getElementById("stars");
+    for (let i = 0; i < 45; i++) {
+        const star = document.createElement("div");
+        star.className = "star";
+        star.style.top = Math.random() * 100 + "vh";
+        star.style.left = Math.random() * 100 + "vw";
+        star.style.animationDelay = (Math.random() * 3) + "s";
+        starsContainer.appendChild(star);
+    }
+
+    function filterTables() {
+
+        const input = document.getElementById("searchInput").value.toLowerCase();
+        const rows = document.querySelectorAll(".cust-row");
+
+        rows.forEach(function(row) {
+
+            const name = row.cells[0].textContent.toLowerCase();
+            const phone = row.cells[1].textContent.toLowerCase();
+
+            if (name.includes(input) || phone.includes(input)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+
+        });
+
+    }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Laptech World - Products</title>
+
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --bg: #05070d;
+            --bg-glow: radial-gradient(circle at 20% 0%, rgba(56, 189, 248, 0.10), transparent 45%),
+                       radial-gradient(circle at 80% 100%, rgba(37, 99, 235, 0.08), transparent 45%);
+            --panel: #0f1729;
+            --panel-2: #0a1224;
+            --border: #1e2a44;
+            --accent: #38bdf8;
+            --accent-2: #2563eb;
+            --text: #e5e7eb;
+            --muted: #8ea0c4;
+            --danger: #f87171;
+            --success: #4ade80;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', Arial, Helvetica, sans-serif;
+            background-color: var(--bg);
+            background-image: var(--bg-glow);
+            color: var(--text);
+        }
+
+        .container {
+            width: 94%;
+            max-width: 1400px;
+            margin: 25px auto 50px;
+        }
+
+        .header {
+            position: relative;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 34px 28px;
+            border-radius: 18px;
+            margin-bottom: 25px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.45), inset 0 0 60px -35px rgba(56,189,248,0.25);
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), var(--accent), transparent);
+            opacity: 0.85;
+        }
+
+        .header-logo {
+            width: 130px;
+            height: 130px;
+            display: block;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            object-fit: cover;
+            filter: drop-shadow(0 0 8px rgba(56,189,248,1)) drop-shadow(0 0 22px rgba(37,99,235,0.9));
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 800;
+            color: #7dd3fc;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 20px rgba(56,189,248,0.6), 0 0 40px rgba(56,189,248,0.3);
+        }
+
+        .header p {
+            margin: 10px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .error-box {
+            background: rgba(248, 113, 113, 0.12);
+            color: var(--danger);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .message {
+            padding: 12px 18px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            background: rgba(248, 113, 113, 0.12);
+            color: var(--danger);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+        }
+
+        .message.success {
+            background: rgba(74, 222, 128, 0.12);
+            color: var(--success);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+        }
+
+        /* CATEGORY CARDS (dashboard style) */
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 22px;
+            margin-bottom: 25px;
+        }
+
+        .category-card {
+            position: relative;
+            background: rgba(15, 23, 41, 0.9);
+            backdrop-filter: blur(6px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px 26px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5), inset -40px 0 60px -30px rgba(56,189,248,0.25);
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+        }
+
+        .category-card::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            pointer-events: none;
+            background: radial-gradient(circle, rgba(56,189,248,0.35), transparent 70%);
+        }
+
+        .category-card:hover {
+            transform: translateY(-8px) scale(1.02) rotate(-0.6deg);
+            border-color: var(--accent);
+            background: rgba(20, 32, 56, 0.95);
+            box-shadow:
+                0 25px 60px rgba(0,0,0,0.6),
+                0 0 0 3px rgba(56,189,248,0.2),
+                inset -50px 0 70px -25px rgba(56,189,248,0.45);
+        }
+
+        .category-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            line-height: 1;
+            margin: 0 auto 16px;
+            background: rgba(56,189,248,0.1);
+            border: 1px solid rgba(56,189,248,0.25);
+            transition: transform 0.25s ease;
+        }
+
+        .category-card:hover .category-icon {
+            transform: scale(1.1) rotate(-4deg);
+        }
+
+        .category-card h3 {
+            margin: 5px 0;
+            font-size: 12.5px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .category-card p {
+            margin: 0;
+            font-size: 27px;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 0 18px rgba(56,189,248,0.4);
+        }
+
+        /* FORMS */
+
+        .form-section {
+            display: none;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 26px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .form-title {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .common-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .field label {
+            font-size: 12.5px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .field input,
+        .field select {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            outline: none;
+            background: var(--panel-2);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .field input::placeholder {
+            color: #5c6b85;
+        }
+
+        .field input:focus,
+        .field select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(56,189,248,0.15);
+        }
+
+        .hint {
+            font-size: 11.5px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .rows-title {
+            margin: 22px 0 12px;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .item-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            padding: 14px;
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        .row-number {
+            grid-column: 1 / -1;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .row-error {
+            grid-column: 1 / -1;
+            color: var(--danger);
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            border: none;
+            padding: 12px 22px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: inherit;
+            font-size: 14px;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--accent-2), var(--accent));
+            color: #04101f;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(56,189,248,0.35);
+        }
+
+        .btn-secondary {
+            background: var(--panel-2);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+        }
+
+        /* TABLE */
+
+        .table-section {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .table-section h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border);
+            font-size: 19px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 950px;
+        }
+
+        th,
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        th {
+            background: var(--panel-2);
+            color: var(--accent);
+            font-size: 11.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        td {
+            font-size: 13.5px;
+            color: var(--text);
+        }
+
+        tr:hover td {
+            background: rgba(56,189,248,0.06);
+        }
+
+        .cat-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            background: rgba(56,189,248,0.12);
+            color: #7dd3fc;
+            border: 1px solid rgba(56,189,248,0.35);
+        }
+
+        .prod-name {
+            font-weight: 700;
+            color: #ffffff;
+            background: rgba(255,255,255,0.03);
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            text-decoration: none;
+            padding: 7px 12px;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+            transition: all 0.15s ease;
+        }
+
+        .edit-btn {
+            background: rgba(37,99,235,0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(37,99,235,0.3);
+        }
+
+        .edit-btn:hover {
+            background: rgba(37,99,235,0.3);
+        }
+
+        .delete-btn {
+            background: rgba(248,113,113,0.12);
+            color: var(--danger);
+            border: 1px solid rgba(248,113,113,0.3);
+        }
+
+        .delete-btn:hover {
+            background: rgba(248,113,113,0.25);
+        }
+
+        .empty {
+            text-align: center;
+            color: var(--muted);
+            padding: 20px;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 1000px) {
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 650px) {
+            .container {
+                width: 96%;
+            }
+
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+/* BULK DELETE BAR */
+
+.bulk-delete-bar {
+    display: none;
+    width: 100%;
+    margin: 0 0 22px;
+    padding: 15px 20px;
+
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    background: linear-gradient(
+        135deg,
+        rgba(15,23,41,0.98),
+        rgba(10,18,36,0.98)
+    );
+
+    border: 1px solid rgba(248,113,113,0.35);
+    border-left: 4px solid #f87171;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 10px 28px rgba(0,0,0,0.30),
+        0 0 18px rgba(248,113,113,0.08);
+}
+
+.bulk-delete-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.bulk-delete-icon {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: rgba(248,113,113,0.12);
+    border: 1px solid rgba(248,113,113,0.30);
+
+    color: #f87171;
+
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.bulk-delete-title {
+    color: #f8fafc;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.bulk-delete-count {
+    margin-top: 2px;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.bulk-delete-button {
+    border: 1px solid rgba(248,113,113,0.45);
+
+    border-radius: 9px;
+
+    padding: 11px 18px;
+
+    background: linear-gradient(
+        135deg,
+        #7f1d1d,
+        #991b1b
+    );
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        filter 0.2s ease;
+}
+
+.bulk-delete-button:hover {
+    transform: translateY(-1px);
+
+    filter: brightness(1.08);
+
+    box-shadow:
+        0 8px 20px rgba(248,113,113,0.18);
+}
+
+.bulk-delete-button:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 650px) {
+
+    .bulk-delete-bar {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 14px;
+    }
+
+    .bulk-delete-button {
+        width: 100%;
+    }
+}
+/* ===== STOCK PAGE STYLE HEADER ===== */
+
+body {
+    background-attachment: fixed;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(15, 23, 41, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.navbar-brand img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    filter: drop-shadow(0 0 8px rgba(56,189,248,1));
+}
+
+.navbar-brand h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 800;
+    color: #7dd3fc;
+}
+
+.navbar-brand small {
+    display: block;
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.nav-link {
+    color: var(--muted);
+    text-decoration: none;
+    background: rgba(56,189,248,0.08);
+    border: 1px solid var(--border);
+    padding: 10px 20px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.nav-link:hover {
+    color: #04101f;
+    background: linear-gradient(90deg, var(--accent-2), var(--accent));
+}
+
+.page-head h1 {
+    margin: 0;
+    font-size: 32px;
+    font-weight: 800;
+    color: #38bdf8;
+    text-shadow: 0 0 20px rgba(56,189,248,0.6);
+}
+
+.page-head .underline {
+    width: 60px;
+    height: 4px;
+    border-radius: 4px;
+    margin: 12px 0 14px;
+    background: linear-gradient(90deg, var(--accent-2), var(--accent));
+}
+
+/* ===== STARS (Dashboard style) ===== */
+
+.star {
+    position: fixed;
+    width: 3px;
+    height: 3px;
+    background: #38bdf8;
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: twinkle 3s ease-in-out infinite;
+    z-index: 0;
+    pointer-events: none;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.15; }
+    50% { opacity: 1; }
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+}
+    </style>
+</head>
+
+<body>
+
+<!-- HEADER (Stock Page Style) -->
+<div class="navbar">
+
+    <div class="navbar-brand">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Laptech World">
+        <div>
+            <h2>Laptech World</h2>
+            <small>Management System</small>
+        </div>
+    </div>
+
+    <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+
+</div>
+
+<div class="container">
+<div class="page-head">
+    <h1>Products</h1>
+    <div class="underline"></div>
+    <p style="margin: 0 0 25px; color: var(--muted); font-size: 14.5px;">Manage mobile phones, laptops, accessories and other products</p>
+</div>
+
+
+    <!-- ERROR / FLASH -->
+
+    {% if error %}
+    <div class="error-box">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="message {% if category == 'success' %}success{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+
+    <!-- CATEGORY CARDS -->
+
+    <div class="category-grid">
+
+        <div class="category-card"
+             onclick="selectCategory('mobileForm')">
+
+            <div class="category-icon">📱</div>
+
+            <h3>Mobile Phones</h3>
+
+            <p>
+                {{ mobile_products|length }} products
+            </p>
+
+        </div>
+
+
+        <div class="category-card"
+             onclick="selectCategory('laptopForm')">
+
+            <div class="category-icon">💻</div>
+
+            <h3>Laptops</h3>
+
+            <p>
+                {{ laptop_products|length }} products
+            </p>
+
+        </div>
+
+
+        <div class="category-card"
+             onclick="selectCategory('accessoryForm')">
+
+            <div class="category-icon">🎧</div>
+
+            <h3>Accessories</h3>
+
+            <p>
+                {{ accessory_products|length }} products
+            </p>
+
+        </div>
+
+
+        <div class="category-card"
+             onclick="selectCategory('otherForm')">
+
+            <div class="category-icon">📦</div>
+
+            <h3>Other Products</h3>
+
+            <p>
+                {{ other_products|length }} products
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- MOBILE FORM -->
+    <!-- ================================================= -->
+
+    <div id="mobileForm" class="form-section">
+
+        <h2 class="form-title">
+            📱 Add Mobile Phones
+        </h2>
+
+        <form method="POST"
+              onsubmit="return validateMobile()">
+
+            <input type="hidden"
+                   name="category"
+                   value="Mobile">
+
+
+            <div class="common-grid">
+
+                <div class="field">
+
+                    <label>Product Name</label>
+
+                    <input type="text"
+                           name="product_name"
+                           list="mobileProducts"
+                           placeholder="e.g. iPhone 15">
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Brand</label>
+
+                    <input type="text"
+                           name="brand"
+                           list="mobileBrands"
+                           placeholder="Select or type brand">
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Quantity</label>
+
+                    <input type="number"
+                           id="mobileQuantity"
+                           name="quantity"
+                           min="1"
+                           value="1"
+                           oninput="generateMobileRows()">
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Common RAM</label>
+
+                    <input type="text"
+                           name="common_ram"
+                           list="ramOptions"
+                           placeholder="Optional">
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Common Storage</label>
+
+                    <input type="text"
+                           name="common_storage"
+                           list="storageOptions"
+                           placeholder="Optional">
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Common Purchase Price</label>
+
+                    <input type="number"
+                           name="common_purchase_price"
+                           min="0"
+                           step="0.01"
+                           placeholder="Optional">
+
+                    <span class="hint">
+                        Leave blank if not available
+                    </span>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Common Sale Price</label>
+
+                    <input type="number"
+                           name="common_sale_price"
+                           min="0"
+                           step="0.01"
+                           placeholder="Optional">
+
+                    <span class="hint">
+                        Leave blank if not available
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <h3 class="rows-title">
+                Individual Mobile Details
+            </h3>
+
+            <div id="mobileRows"></div>
+
+
+            <div class="buttons">
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    Add Mobile Phones
+                </button>
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        onclick="selectCategory(null)">
+                    Cancel
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- LAPTOP FORM -->
+    <!-- ================================================= -->
+
+    <div id="laptopForm" class="form-section">
+
+        <h2 class="form-title">
+            💻 Add Laptops
+        </h2>
+
+        <form method="POST">
+
+            <input type="hidden"
+                   name="category"
+                   value="Laptop">
+
+
+            <div class="common-grid">
+
+                <div class="field">
+
+                    <label>Product Name</label>
+
+                    <input type="text"
+                           name="product_name"
+                           list="laptopProducts"
+                           placeholder="e.g. Latitude 5400">
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Brand</label>
+
+                    <input type="text"
+                           name="brand"
+                           list="laptopBrands"
+                           placeholder="Select or type brand">
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Quantity</label>
+
+                    <input type="number"
+                           id="laptopQuantity"
+                           name="quantity"
+                           min="1"
+                           value="1"
+                           oninput="generateLaptopRows()">
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Common Generation</label>
+
+                    <input type="text"
+                           name="common_generation"
+                           list="generationOptions"
+                           placeholder="Optional">
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Common Processor (Core)</label>
+
+                    <input type="text"
+                           name="common_processor"
+                           list="coreOptions"
+                           placeholder="Optional">
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Common Purchase Price</label>
+
+                    <input type="number"
+                           name="common_purchase_price"
+                           min="0"
+                           step="0.01"
+                           placeholder="Optional">
+
+                    <span class="hint">
+                        Leave blank if not available
+                    </span>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Common Sale Price</label>
+
+                    <input type="number"
+                           name="common_sale_price"
+                           min="0"
+                           step="0.01"
+                           placeholder="Optional">
+
+                    <span class="hint">
+                        Leave blank if not available
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <h3 class="rows-title">
+                Individual Laptop Details
+            </h3>
+
+            <div id="laptopRows"></div>
+
+
+            <div class="buttons">
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    Add Laptops
+                </button>
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        onclick="selectCategory(null)">
+                    Cancel
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- ACCESSORY FORM -->
+    <!-- ================================================= -->
+
+    <div id="accessoryForm" class="form-section">
+
+        <h2 class="form-title">
+            🎧 Add Accessories
+        </h2>
+
+        <form method="POST">
+
+            <input type="hidden"
+                   name="category"
+                   value="Accessory">
+
+
+            <div class="common-grid">
+
+                <div class="field">
+
+                    <label>Common Product Name</label>
+
+                    <input type="text"
+                           name="product_name"
+                           list="accessoryProducts"
+                           placeholder="e.g. Charger">
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Common Brand</label>
+
+                    <input type="text"
+                           name="brand"
+                           list="accessoryBrands"
+                           placeholder="Optional">
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Quantity</label>
+
+                    <input type="number"
+                           id="accessoryQuantity"
+                           name="quantity"
+                           min="1"
+                           value="1"
+                           oninput="generateAccessoryRows()">
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Common Purchase Price</label>
+
+                    <input type="number"
+                           name="common_purchase_price"
+                           min="0"
+                           step="0.01"
+                           placeholder="Optional">
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Common Sale Price</label>
+
+                    <input type="number"
+                           name="common_sale_price"
+                           min="0"
+                           step="0.01"
+                           placeholder="Optional">
+
+                </div>
+
+            </div>
+
+
+            <h3 class="rows-title">
+                Individual Accessory Details
+            </h3>
+
+            <div id="accessoryRows"></div>
+
+
+            <div class="buttons">
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    Add Accessories
+                </button>
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        onclick="selectCategory(null)">
+                    Cancel
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- OTHER FORM -->
+    <!-- ================================================= -->
+
+    <div id="otherForm" class="form-section">
+
+        <h2 class="form-title">
+            📦 Add Other Products
+        </h2>
+
+        <form method="POST">
+
+            <input type="hidden"
+                   name="category"
+                   value="Other">
+
+
+            <div class="common-grid">
+
+                <div class="field">
+
+                    <label>Common Product Name</label>
+
+                    <input type="text"
+                           name="product_name"
+                           list="otherProducts"
+                           placeholder="Optional">
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Common Brand</label>
+
+                    <input type="text"
+                           name="brand"
+                           placeholder="Optional">
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Quantity</label>
+
+                    <input type="number"
+                           id="otherQuantity"
+                           name="quantity"
+                           min="1"
+                           value="1"
+                           oninput="generateOtherRows()">
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Common Purchase Price</label>
+
+                    <input type="number"
+                           name="common_purchase_price"
+                           min="0"
+                           step="0.01"
+                           placeholder="Optional">
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Common Sale Price</label>
+
+                    <input type="number"
+                           name="common_sale_price"
+                           min="0"
+                           step="0.01"
+                           placeholder="Optional">
+
+                </div>
+
+            </div>
+
+
+            <h3 class="rows-title">
+                Individual Product Details
+            </h3>
+
+            <div id="otherRows"></div>
+
+
+            <div class="buttons">
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    Add Other Products
+                </button>
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        onclick="selectCategory(null)">
+                    Cancel
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- MOBILE PRODUCT TABLE -->
+    <!-- ================================================= -->
+
+    <div class="table-section">
+
+           <h2>📱 Mobile Products</h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th style="width:36px;"><input type="checkbox" onclick="toggleTableCheckboxes(this, 'mobileTable')"></th>
+                        <th>ID</th>
+                        <th>Category</th>
+                        <th>Product</th>
+                        <th>Brand</th>
+                        <th>IMEI 1</th>
+                        <th>IMEI 2</th>
+                        <th>RAM</th>
+                        <th>Storage</th>
+                        <th>Purchase</th>
+                        <th>Sale</th>
+                        <th>Date</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% if mobile_products %}
+
+                    {% for product in mobile_products %}
+
+                    <tr>
+
+                        <td><input type="checkbox" class="product-checkbox mobileTable" value="{{ product.id }}" onclick="updateProductBulkButton()"></td>
+
+                        <td>{{ loop.index }}</td>
+
+                        <td><span class="cat-badge">{{ product.category }}</span></td>
+
+                        <td>
+                            <span class="prod-name">{{ product.product_name or "" }}</span>
+                        </td>
+
+                        <td>
+                            {{ product.brand or "" }}
+                        </td>
+
+                        <td>
+                        {{ product.imei or "" }}
+                        </td>
+
+                        <td>
+                        {{ product.imei2 or "" }}
+                        </td>
+
+                        <td>
+                            {{ product.ram or "" }}
+                        </td>
+
+                        <td>
+                            {{ product.storage or "" }}
+                        </td>
+
+                        <td>
+                            {% if product.purchase_price is not none %}
+                                {{ product.purchase_price }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if product.sale_price is not none %}
+                                {{ product.sale_price }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if product.created_at %}
+                                {{ product.created_at.strftime('%d-%m-%Y') }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <a class="edit-btn"
+                               href="{{ url_for('edit_product', product_id=product.id) }}">
+                                Edit
+                            </a>
+                        </td>
+
+                        <td>
+                            <a class="delete-btn"
+                               href="{{ url_for('delete_product', product_id=product.id) }}"
+                               onclick="return confirm('Delete this product?')">
+                                Delete
+                            </a>
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <tr>
+                        <td colspan="13" class="empty">
+                            No mobile products added yet.
+                        </td>
+                    </tr>
+
+                {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- LAPTOP PRODUCT TABLE -->
+    <!-- ================================================= -->
+
+    <div class="table-section">
+
+        <h2>💻 Laptop Products</h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th style="width:36px;"><input type="checkbox" onclick="toggleTableCheckboxes(this, 'laptopTable')"></th>
+                        <th>ID</th>
+                        <th>Category</th>
+                        <th>Product</th>
+                        <th>Brand</th>
+                        <th>Serial Number</th>
+                        <th>Generation</th>
+                        <th>Processor</th>
+                        <th>Purchase</th>
+                        <th>Sale</th>
+                        <th>Date</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% if laptop_products %}
+
+                    {% for product in laptop_products %}
+
+                    <tr>
+
+                        <td><input type="checkbox" class="product-checkbox laptopTable" value="{{ product.id }}" onclick="updateProductBulkButton()"></td>
+
+                        <td>{{ loop.index }}</td>
+
+                        <td><span class="cat-badge">{{ product.category }}</span></td>
+
+                        <td>
+                            <span class="prod-name">{{ product.product_name or "" }}</span>
+                        </td>
+
+                        <td>
+                            {{ product.brand or "" }}
+                        </td>
+
+                        <td>
+                            {{ product.serial_number or "" }}
+                        </td>
+
+                        <td>
+                            {{ product.generation or "" }}
+                        </td>
+
+                        <td>
+                            {{ product.processor or "" }}
+                        </td>
+
+                        <td>
+                            {% if product.purchase_price is not none %}
+                                {{ product.purchase_price }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if product.sale_price is not none %}
+                                {{ product.sale_price }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if product.created_at %}
+                                {{ product.created_at.strftime('%d-%m-%Y') }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <a class="edit-btn"
+                               href="{{ url_for('edit_product', product_id=product.id) }}">
+                                Edit
+                            </a>
+                        </td>
+
+                        <td>
+                            <a class="delete-btn"
+                               href="{{ url_for('delete_product', product_id=product.id) }}"
+                               onclick="return confirm('Delete this product?')">
+                                Delete
+                            </a>
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <tr>
+                        <td colspan="13" class="empty">
+                            No laptop products added yet.
+                        </td>
+                    </tr>
+
+                {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- ACCESSORY PRODUCT TABLE -->
+    <!-- ================================================= -->
+
+    <div class="table-section">
+
+        <h2>🎧 Accessories</h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th style="width:36px;"><input type="checkbox" onclick="toggleTableCheckboxes(this, 'accessoryTable')"></th>
+                        <th>ID</th>
+                        <th>Category</th>
+                        <th>Product</th>
+                        <th>Brand</th>
+                        <th>IMEI / Serial</th>
+                        <th>Purchase</th>
+                        <th>Sale</th>
+                        <th>Date</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% if accessory_products %}
+
+                    {% for product in accessory_products %}
+
+                    <tr>
+
+                        <td><input type="checkbox" class="product-checkbox accessoryTable" value="{{ product.id }}" onclick="updateProductBulkButton()"></td>
+
+                        <td>{{ loop.index }}</td>
+
+                        <td><span class="cat-badge">{{ product.category }}</span></td>
+
+                        <td>
+                            <span class="prod-name">{{ product.product_name or "" }}</span>
+                        </td>
+
+                        <td>
+                            {{ product.brand or "" }}
+                        </td>
+
+                        <td></td>
+
+                        <td>
+                            {% if product.purchase_price is not none %}
+                                {{ product.purchase_price }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if product.sale_price is not none %}
+                                {{ product.sale_price }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if product.created_at %}
+                                {{ product.created_at.strftime('%d-%m-%Y') }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <a class="edit-btn"
+                               href="{{ url_for('edit_product', product_id=product.id) }}">
+                                Edit
+                            </a>
+                        </td>
+
+                        <td>
+                            <a class="delete-btn"
+                               href="{{ url_for('delete_product', product_id=product.id) }}"
+                               onclick="return confirm('Delete this product?')">
+                                Delete
+                            </a>
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <tr>
+                        <td colspan="11" class="empty">
+                            No accessories added yet.
+                        </td>
+                    </tr>
+
+                {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- OTHER PRODUCT TABLE -->
+    <!-- ================================================= -->
+
+    <div class="table-section">
+
+        <h2>📦 Other Products</h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th style="width:36px;"><input type="checkbox" onclick="toggleTableCheckboxes(this, 'otherTable')"></th>
+                        <th>ID</th>
+                        <th>Category</th>
+                        <th>Product</th>
+                        <th>Brand</th>
+                        <th>IMEI / Serial</th>
+                        <th>Purchase</th>
+                        <th>Sale</th>
+                        <th>Date</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% if other_products %}
+
+                    {% for product in other_products %}
+
+                    <tr>
+
+                        <td><input type="checkbox" class="product-checkbox otherTable" value="{{ product.id }}" onclick="updateProductBulkButton()"></td>
+
+                        <td>{{ loop.index }}</td>
+
+                        <td><span class="cat-badge">{{ product.category }}</span></td>
+
+                        <td>
+                            <span class="prod-name">{{ product.product_name or "" }}</span>
+                        </td>
+
+                        <td>
+                            {{ product.brand or "" }}
+                        </td>
+
+                        <td></td>
+
+                        <td>
+                            {% if product.purchase_price is not none %}
+                                {{ product.purchase_price }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if product.sale_price is not none %}
+                                {{ product.sale_price }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if product.created_at %}
+                                {{ product.created_at.strftime('%d-%m-%Y') }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <a class="edit-btn"
+                               href="{{ url_for('edit_product', product_id=product.id) }}">
+                                Edit
+                            </a>
+                        </td>
+
+                        <td>
+                            <a class="delete-btn"
+                               href="{{ url_for('delete_product', product_id=product.id) }}"
+                               onclick="return confirm('Delete this product?')">
+                                Delete
+                            </a>
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <tr>
+                        <td colspan="11" class="empty">
+                            No other products added yet.
+                        </td>
+                    </tr>
+
+                {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- Floating bulk delete bar -->
+<!-- BULK DELETE BAR -->
+
+<div id="bulkDeleteBar" class="bulk-delete-bar">
+
+    <div class="bulk-delete-info">
+
+        <span class="bulk-delete-icon">✓</span>
+
+        <div>
+            <div class="bulk-delete-title">
+                Products Selected
+            </div>
+
+            <div id="bulkDeleteCount" class="bulk-delete-count">
+                0 products selected
+            </div>
+        </div>
+
+    </div>
+
+    <button type="button"
+            class="bulk-delete-button"
+            onclick="bulkDeleteProducts()">
+
+        🗑 Delete Selected
+
+    </button>
+
+</div>
+
+<form method="POST"
+      action="{{ url_for('bulk_delete_products') }}"
+      id="bulkDeleteProductsForm"
+      style="display:none;">
+
+    <input type="hidden"
+           name="product_ids"
+           id="bulkDeleteProductIds">
+
+</form>
+
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- DATALISTS -->
+<!-- ===================================================== -->
+
+<datalist id="mobileBrands">
+    <option value="Apple">
+    <option value="Samsung">
+    <option value="Xiaomi">
+    <option value="Oppo">
+    <option value="Vivo">
+    <option value="Realme">
+    <option value="OnePlus">
+    <option value="Google">
+    <option value="Infinix">
+    <option value="Tecno">
+    <option value="Nokia">
+    <option value="Huawei">
+    <option value="Honor">
+    <option value="Motorola">
+    <option value="ZTE">
+    <option value="Sony">
+    <option value="QMobile">
+    <option value="Itel">
+    <option value="Lava">
+</datalist>
+
+
+<datalist id="laptopBrands">
+    <option value="Dell">
+    <option value="HP">
+    <option value="Lenovo">
+    <option value="Acer">
+    <option value="Asus">
+    <option value="Apple">
+    <option value="Microsoft">
+    <option value="MSI">
+    <option value="Toshiba">
+    <option value="Huawei">
+    <option value="Samsung">
+    <option value="LG">
+    <option value="Gigabyte">
+    <option value="Fujitsu">
+    <option value="Panasonic">
+    <option value="Chuwi">
+</datalist>
+
+
+<datalist id="accessoryBrands">
+    <option value="Anker">
+    <option value="Baseus">
+    <option value="Remax">
+    <option value="JBL">
+    <option value="Logitech">
+    <option value="Faster">
+    <option value="Generic">
+</datalist>
+
+
+<datalist id="mobileProducts">
+    <option value="iPhone 11">
+    <option value="iPhone 12">
+    <option value="iPhone 13">
+    <option value="iPhone 14">
+    <option value="iPhone 15">
+    <option value="iPhone 16">
+    <option value="Galaxy A14">
+    <option value="Galaxy A34">
+    <option value="Galaxy A54">
+    <option value="Galaxy S23">
+    <option value="Galaxy S24">
+    <option value="Redmi 12">
+    <option value="Redmi Note 11">
+    <option value="Redmi Note 12">
+    <option value="Redmi Note 13">
+    <option value="Infinix Hot 30">
+    <option value="Infinix Hot 40">
+    <option value="Infinix Note 30">
+    <option value="Tecno Spark 10">
+    <option value="Vivo Y17s">
+    <option value="Oppo A18">
+</datalist>
+
+
+<datalist id="laptopProducts">
+    <option value="Latitude 5400">
+    <option value="Latitude 5410">
+    <option value="Latitude 5420">
+    <option value="Latitude 5490">
+    <option value="Dell Inspiron 15">
+    <option value="Dell XPS 13">
+    <option value="EliteBook 840">
+    <option value="EliteBook 850">
+    <option value="HP Pavilion 14">
+    <option value="HP ProBook 450">
+    <option value="ThinkPad T480">
+    <option value="ThinkPad T490">
+    <option value="ThinkPad T14">
+    <option value="Lenovo IdeaPad 3">
+    <option value="Lenovo Legion 5">
+    <option value="Aspire 5">
+    <option value="Asus VivoBook 15">
+    <option value="Asus ZenBook 14">
+    <option value="MacBook Air">
+    <option value="MacBook Pro">
+</datalist>
+
+
+<datalist id="accessoryProducts">
+    <option value="Charger">
+    <option value="Handsfree">
+    <option value="Headphones">
+    <option value="Bluetooth Speaker">
+    <option value="USB Cable">
+    <option value="Data Cable">
+    <option value="Power Bank">
+    <option value="Mobile Cover">
+    <option value="Screen Protector">
+    <option value="Tempered Glass">
+    <option value="Car Charger">
+    <option value="Selfie Stick">
+    <option value="Ring Light">
+    <option value="Phone Stand">
+    <option value="Mouse">
+    <option value="Keyboard">
+</datalist>
+
+
+<datalist id="otherProducts">
+    <option value="Battery">
+    <option value="Memory Card">
+    <option value="USB">
+    <option value="Adapter">
+    <option value="Speaker">
+    <option value="Hard Drive">
+    <option value="SSD">
+    <option value="RAM Module">
+    <option value="Motherboard">
+    <option value="Laptop Bag">
+    <option value="Cooling Pad">
+</datalist>
+
+
+<datalist id="ramOptions">
+    <option value="1GB">
+    <option value="2GB">
+    <option value="3GB">
+    <option value="4GB">
+    <option value="6GB">
+    <option value="8GB">
+    <option value="12GB">
+    <option value="16GB">
+    <option value="18GB">
+    <option value="24GB">
+</datalist>
+
+
+<datalist id="storageOptions">
+    <option value="16GB">
+    <option value="32GB">
+    <option value="64GB">
+    <option value="128GB">
+    <option value="256GB">
+    <option value="512GB">
+    <option value="1TB">
+    <option value="2TB">
+</datalist>
+
+
+<datalist id="generationOptions">
+    <option value="3rd Gen">
+    <option value="4th Gen">
+    <option value="5th Gen">
+    <option value="6th Gen">
+    <option value="7th Gen">
+    <option value="8th Gen">
+    <option value="9th Gen">
+    <option value="10th Gen">
+    <option value="11th Gen">
+    <option value="12th Gen">
+    <option value="13th Gen">
+    <option value="14th Gen">
+    <option value="Apple M1">
+    <option value="Apple M2">
+    <option value="Apple M3">
+    <option value="Ryzen 3000 Series">
+    <option value="Ryzen 5000 Series">
+    <option value="Ryzen 7000 Series">
+</datalist>
+
+
+<datalist id="coreOptions">
+    <option value="Celeron">
+    <option value="Pentium">
+    <option value="Core i3">
+    <option value="Core i5">
+    <option value="Core i7">
+    <option value="Core i9">
+    <option value="Ryzen 3">
+    <option value="Ryzen 5">
+    <option value="Ryzen 7">
+    <option value="Ryzen 9">
+    <option value="Apple M1">
+    <option value="Apple M2">
+    <option value="Apple M3">
+</datalist>
+
+
+<script>
+
+    // =====================================================
+    // CATEGORY SELECT
+    // =====================================================
+
+    function selectCategory(categoryId) {
+
+        const sections = document.querySelectorAll(".form-section");
+
+        sections.forEach(function(section) {
+            section.classList.remove("active");
+        });
+
+        if (categoryId) {
+
+            const selected = document.getElementById(categoryId);
+
+            if (selected) {
+                selected.classList.add("active");
+
+                selected.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+            }
+        }
+    }
+
+
+    // =====================================================
+    // MOBILE ROWS
+    // =====================================================
+
+    function generateMobileRows() {
+
+        const quantityInput =
+            document.getElementById("mobileQuantity");
+
+        const rowsContainer =
+            document.getElementById("mobileRows");
+
+        let quantity =
+            parseInt(quantityInput.value);
+
+        if (!quantity || quantity < 1) {
+            quantity = 1;
+        }
+
+        rowsContainer.innerHTML = "";
+
+        for (let i = 1; i <= quantity; i++) {
+
+            const row = document.createElement("div");
+
+            row.className = "item-row mobile-row";
+
+            row.innerHTML = `
+
+                <div class="row-number">
+                    Mobile #${i}
+                </div>
+
+               <div class="field"> 
+
+    <label>IMEI 1</label> 
+
+    <input type="text" 
+           name="imei[]" 
+           maxlength="15" 
+           inputmode="numeric" 
+           placeholder="Optional" 
+           oninput="validateIMEIRow(this, ${i})"> 
+
+    <span id="imeiError${i}" 
+          class="row-error"></span> 
+
+</div>
+
+<div class="field"> 
+
+    <label>IMEI 2</label> 
+
+    <input type="text" 
+           name="imei2[]" 
+           maxlength="15" 
+           inputmode="numeric" 
+           placeholder="Optional" 
+           oninput="validateIMEI2Row(this, ${i})"> 
+
+    <span id="imei2Error${i}" 
+          class="row-error"></span> 
+
+</div>
+
+                <div class="field">
+
+                    <label>RAM</label>
+
+                    <input type="text"
+                           name="ram[]"
+                           list="ramOptions"
+                           placeholder="Common / blank">
+
+                </div>
+
+                <div class="field">
+
+                    <label>Storage</label>
+
+                    <input type="text"
+                           name="storage[]"
+                           list="storageOptions"
+                           placeholder="Common / blank">
+
+                </div>
+
+                <div class="field">
+
+                    <label>Purchase Price</label>
+
+                    <input type="number"
+                           name="purchase_price[]"
+                           min="0"
+                           step="0.01"
+                           placeholder="Common / blank">
+
+                </div>
+
+                <div class="field">
+
+                    <label>Sale Price</label>
+
+                    <input type="number"
+                           name="sale_price[]"
+                           min="0"
+                           step="0.01"
+                           placeholder="Common / blank">
+
+                </div>
+            `;
+
+            rowsContainer.appendChild(row);
+        }
+    }
+
+
+    // =====================================================
+    // LAPTOP ROWS
+    // =====================================================
+
+    function generateLaptopRows() {
+
+        const quantityInput =
+            document.getElementById("laptopQuantity");
+
+        const rowsContainer =
+            document.getElementById("laptopRows");
+
+        let quantity =
+            parseInt(quantityInput.value);
+
+        if (!quantity || quantity < 1) {
+            quantity = 1;
+        }
+
+        rowsContainer.innerHTML = "";
+
+        for (let i = 1; i <= quantity; i++) {
+
+            const row = document.createElement("div");
+
+            row.className = "item-row laptop-row";
+
+            row.innerHTML = `
+
+                <div class="row-number">
+                    Laptop #${i}
+                </div>
+
+                <div class="field">
+
+                    <label>Serial Number</label>
+
+                    <input type="text"
+                           name="serial[]"
+                           placeholder="Optional">
+
+                </div>
+
+                <div class="field">
+
+                    <label>Generation</label>
+
+                    <input type="text"
+                           name="generation[]"
+                           list="generationOptions"
+                           placeholder="Common / blank">
+
+                </div>
+
+                <div class="field">
+
+                    <label>Processor (Core)</label>
+
+                    <input type="text"
+                           name="processor[]"
+                           list="coreOptions"
+                           placeholder="Common / blank">
+
+                </div>
+
+                <div class="field">
+
+                    <label>Purchase Price</label>
+
+                    <input type="number"
+                           name="purchase_price[]"
+                           min="0"
+                           step="0.01"
+                           placeholder="Common / blank">
+
+                </div>
+
+                <div class="field">
+
+                    <label>Sale Price</label>
+
+                    <input type="number"
+                           name="sale_price[]"
+                           min="0"
+                           step="0.01"
+                           placeholder="Common / blank">
+
+                </div>
+            `;
+
+            rowsContainer.appendChild(row);
+        }
+    }
+
+
+    // =====================================================
+    // ACCESSORY ROWS
+    // =====================================================
+
+    function generateAccessoryRows() {
+
+        const quantityInput =
+            document.getElementById("accessoryQuantity");
+
+        const rowsContainer =
+            document.getElementById("accessoryRows");
+
+        let quantity =
+            parseInt(quantityInput.value);
+
+        if (!quantity || quantity < 1) {
+            quantity = 1;
+        }
+
+        rowsContainer.innerHTML = "";
+
+        for (let i = 1; i <= quantity; i++) {
+
+            const row = document.createElement("div");
+
+            row.className = "item-row accessory-row";
+
+            row.innerHTML = `
+
+                <div class="row-number">
+                    Accessory #${i}
+                </div>
+
+                <div class="field">
+
+                    <label>Product Name</label>
+
+                    <input type="text"
+                           name="accessory_product_name[]"
+                           list="accessoryProducts"
+                           placeholder="Common / individual">
+
+                </div>
+
+                <div class="field">
+
+                    <label>Brand</label>
+
+                    <input type="text"
+                           name="accessory_brand[]"
+                           list="accessoryBrands"
+                           placeholder="Common / individual">
+
+                </div>
+
+                <div class="field">
+
+                    <label>Purchase Price</label>
+
+                    <input type="number"
+                           name="purchase_price[]"
+                           min="0"
+                           step="0.01"
+                           placeholder="Common / blank">
+
+                </div>
+
+                <div class="field">
+
+                    <label>Sale Price</label>
+
+                    <input type="number"
+                           name="sale_price[]"
+                           min="0"
+                           step="0.01"
+                           placeholder="Common / blank">
+
+                </div>
+            `;
+
+            rowsContainer.appendChild(row);
+        }
+    }
+
+
+    // =====================================================
+    // OTHER ROWS
+    // =====================================================
+
+    function generateOtherRows() {
+
+        const quantityInput =
+            document.getElementById("otherQuantity");
+
+        const rowsContainer =
+            document.getElementById("otherRows");
+
+        let quantity =
+            parseInt(quantityInput.value);
+
+        if (!quantity || quantity < 1) {
+            quantity = 1;
+        }
+
+        rowsContainer.innerHTML = "";
+
+        for (let i = 1; i <= quantity; i++) {
+
+            const row = document.createElement("div");
+
+            row.className = "item-row other-row";
+
+            row.innerHTML = `
+
+                <div class="row-number">
+                    Other Product #${i}
+                </div>
+
+                <div class="field">
+
+                    <label>Product Name</label>
+
+                    <input type="text"
+                           name="other_product_name[]"
+                           list="otherProducts"
+                           placeholder="Common / individual">
+
+                </div>
+
+                <div class="field">
+
+                    <label>Brand</label>
+
+                    <input type="text"
+                           name="other_brand[]"
+                           placeholder="Common / individual">
+
+                </div>
+
+                <div class="field">
+
+                    <label>Purchase Price</label>
+
+                    <input type="number"
+                           name="purchase_price[]"
+                           min="0"
+                           step="0.01"
+                           placeholder="Common / blank">
+
+                </div>
+
+                <div class="field">
+
+                    <label>Sale Price</label>
+
+                    <input type="number"
+                           name="sale_price[]"
+                           min="0"
+                           step="0.01"
+                           placeholder="Common / blank">
+
+                </div>
+            `;
+
+            rowsContainer.appendChild(row);
+        }
+    }
+
+
+    // =====================================================
+    // IMEI VALIDATION
+    // =====================================================
+
+        function validateIMEIRow(input, rowNumber) {
+
+        const error =
+            document.getElementById(
+                "imeiError" + rowNumber
+            );
+
+        const value =
+            input.value.trim();
+
+        if (value === "") {
+
+            error.textContent = "";
+
+            return true;
+        }
+
+        if (!/^\d{15}$/.test(value)) {
+
+            error.textContent =
+                "IMEI must contain exactly 15 digits.";
+
+            return false;
+        }
+
+        error.textContent = "";
+
+        return true;
+    }
+
+
+    function validateIMEI2Row(input, rowNumber) {
+
+        const error =
+            document.getElementById(
+                "imei2Error" + rowNumber
+            );
+
+        const value =
+            input.value.trim();
+
+        if (value === "") {
+
+            error.textContent = "";
+
+            return true;
+        }
+
+        if (!/^\d{15}$/.test(value)) {
+
+            error.textContent =
+                "IMEI 2 must contain exactly 15 digits.";
+
+            return false;
+        }
+
+        error.textContent = "";
+
+        return true;
+    }
+
+
+    function validateMobile() {
+
+        const imeiInputs =
+            document.querySelectorAll(
+                '#mobileRows input[name="imei[]"]'
+            );
+
+        const imei2Inputs =
+            document.querySelectorAll(
+                '#mobileRows input[name="imei2[]"]'
+            );
+
+        let valid = true;
+
+        imeiInputs.forEach(function(input, index) {
+
+            if (!validateIMEIRow(input, index + 1)) {
+                valid = false;
+            }
+        });
+
+        imei2Inputs.forEach(function(input, index) {
+
+            if (!validateIMEI2Row(input, index + 1)) {
+                valid = false;
+            }
+        });
+
+        return valid;
+    }
+
+    // =====================================================
+    // BULK SELECT / DELETE PRODUCTS
+    // =====================================================
+
+    function toggleTableCheckboxes(masterCheckbox, tableClass) {
+
+        const checkboxes = document.querySelectorAll("." + tableClass);
+
+        checkboxes.forEach(function(cb) {
+            cb.checked = masterCheckbox.checked;
+        });
+
+        updateProductBulkButton();
+
+    }
+
+
+    function updateProductBulkButton() {
+
+        const checked = document.querySelectorAll(".product-checkbox:checked");
+
+        const bar = document.getElementById("bulkDeleteBar");
+
+        const count = document.getElementById("bulkDeleteCount");
+
+        if (checked.length > 0) {
+
+            bar.style.display = "flex";
+            count.textContent = checked.length + " product(s) selected";
+
+        } else {
+
+            bar.style.display = "none";
+
+        }
+
+    }
+
+
+    function bulkDeleteProducts() {
+
+        const checked = document.querySelectorAll(".product-checkbox:checked");
+
+        if (checked.length === 0) {
+            return;
+        }
+
+        const ids = Array.from(checked).map(function(cb) { return cb.value; }).join(",");
+
+        if (!confirm("Selected " + checked.length + " product(s) ko Trash mein bhej dein?")) {
+            return;
+        }
+
+        document.getElementById("bulkDeleteProductIds").value = ids;
+
+        document.getElementById("bulkDeleteProductsForm").submit();
+
+    }
+    // =====================================================
+    // INITIAL ROWS
+    // =====================================================
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function() {
+
+            generateMobileRows();
+
+            generateLaptopRows();
+
+            generateAccessoryRows();
+
+            generateOtherRows();
+
+        }
+    );
+    // =====================================================
+    // STARS BACKGROUND
+    // =====================================================
+
+    const starsContainer = document.getElementById("stars");
+    for (let i = 0; i < 45; i++) {
+        const star = document.createElement("div");
+        star.className = "star";
+        star.style.top = Math.random() * 100 + "vh";
+        star.style.left = Math.random() * 100 + "vw";
+        star.style.animationDelay = (Math.random() * 3) + "s";
+        starsContainer.appendChild(star);
+    }
+</script>
+
+</body>
+</html>

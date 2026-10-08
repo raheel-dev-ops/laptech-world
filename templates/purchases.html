@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchases - Laptech World</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+        :root {
+            --bg: #05070d; --panel: #0f1729; --panel-2: #0a1224;
+            --border: #1e2a44; --accent: #38bdf8; --accent-2: #2563eb;
+            --text: #e5e7eb; --muted: #8ea0c4; --success: #4ade80; --danger: #f87171;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; font-family: 'Poppins', Arial, sans-serif; background-color: var(--bg);
+            background-image: radial-gradient(circle at 15% 0%, rgba(56, 189, 248, 0.10), transparent 45%);
+            color: var(--text); min-height: 100vh;
+        }
+        .navbar {
+            position: sticky; top: 0; z-index: 50; background: rgba(15, 23, 41, 0.92);
+            backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); padding: 16px 30px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .navbar-brand { display: flex; align-items: center; gap: 16px; }
+        .navbar-brand img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; filter: drop-shadow(0 0 8px rgba(56,189,248,1)); }
+        .navbar-brand h2 { margin: 0; font-size: 24px; font-weight: 800; color: #7dd3fc; }
+        .nav-link {
+            color: var(--muted); text-decoration: none; background: rgba(56,189,248,0.08);
+            border: 1px solid var(--border); padding: 10px 20px; border-radius: 9px; font-size: 13px; font-weight: 600;
+        }
+        .container { width: 95%; max-width: 1400px; margin: 30px auto 50px; }
+        .page-head h1 { margin: 0; font-size: 32px; font-weight: 800; color: #38bdf8; }
+        .underline { width: 60px; height: 4px; border-radius: 4px; margin: 12px 0 26px; background: linear-gradient(90deg, var(--accent-2), var(--accent)); }
+
+        .cards-summary { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 22px; }
+        .total-card {
+            background: rgba(15, 23, 41, 0.92); border: 1px solid rgba(56,189,248,0.35);
+            border-radius: 14px; padding: 16px 24px; display: inline-flex; align-items: center; gap: 14px;
+        }
+        .total-card .label { font-size: 13px; color: var(--muted); font-weight: 600; }
+        .total-card .value { font-size: 22px; font-weight: 800; color: var(--success); }
+        .total-card .value.due { color: var(--danger); }
+
+        .section { background: rgba(15, 23, 41, 0.92); border: 1px solid var(--border); border-radius: 18px; padding: 12px; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 1000px; }
+        th, td { border-bottom: 1px solid var(--border); padding: 13px; text-align: center; font-size: 13.5px; }
+        th { background: var(--panel-2); color: var(--accent); font-size: 11.5px; text-transform: uppercase; }
+        .cat-badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; background: rgba(56,189,248,0.12); color: #7dd3fc; }
+        .money { color: var(--success); font-weight: 700; }
+        .due-text { color: var(--danger); font-weight: 700; }
+        
+        .pay-form { display: flex; gap: 6px; justify-content: center; }
+        .pay-form input { width: 80px; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--panel-2); color: #fff; font-size: 12px; }
+        .pay-form button { padding: 4px 10px; border-radius: 6px; border: none; background: var(--accent); color: #000; font-weight: 700; cursor: pointer; font-size: 12px; }
+   /* Dashboard Button Hover Styling */
+        .nav-link:hover {
+            background: #2563eb !important;
+            color: #ffffff !important;
+            border-color: #38bdf8 !important;
+            box-shadow: 0 0 12px rgba(37, 99, 235, 0.5);
+            transition: all 0.2s ease-in-out;
+        }
+   </style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="navbar-brand">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Laptech World">
+        <div>
+            <h2>Laptech World</h2>
+            <small style="color:var(--muted)">Management System</small>
+        </div>
+    </div>
+    <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+</div>
+
+<div class="container">
+    <div class="page-head">
+        <h1>Purchases</h1>
+        <div class="underline"></div>
+    </div>
+
+    <div class="cards-summary">
+        <div class="total-card">
+            <span class="label">Total Purchase Value</span>
+            <span class="value">Rs. {{ "%.2f"|format(total_purchase_value) }}</span>
+        </div>
+        <div class="total-card">
+            <span class="label">Today's Purchase Value</span>
+            <span class="value">Rs. {{ "%.2f"|format(today_purchase_value) }}</span>
+        </div>
+    </div>
+
+    <div class="section">
+        {% if purchases %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Supplier</th>
+                    <th>Category</th>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Total Cost</th>
+                    <th>Paid Amount</th>
+                    <th>Pending Due</th>
+                    <th>Add Payment</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in purchases %}
+                <tr>
+                    <td>{{ p.date.strftime('%d-%m-%Y') if p.date else '-' }}</td>
+                    <td><strong>{{ p.supplier_name }}</strong></td>
+                    <td><span class="cat-badge">{{ p.category or '-' }}</span></td>
+                    <td>{{ p.product_name or '-' }}</td>
+                    <td>{{ p.quantity }}</td>
+                    <td class="money">Rs. {{ "%.2f"|format(p.total_cost) }}</td>
+                    <td style="color: #60a5fa; font-weight:600;">Rs. {{ "%.2f"|format(p.paid_amount) }}</td>
+                    <td class="due-text">
+                        {% if p.due_amount > 0 %}
+                            Rs. {{ "%.2f"|format(p.due_amount) }}
+                        {% else %}
+                            <span style="color:var(--success)">Cleared</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if p.due_amount > 0 %}
+                        <form action="{{ url_for('update_supplier_payment', product_id=p.id) }}" method="POST" class="pay-form">
+                            <input type="number" step="0.01" name="additional_payment" placeholder="Amount" required>
+                            <button type="submit">Pay</button>
+                        </form>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div style="text-align:center; padding:30px; color:var(--muted);">No purchases recorded yet.</div>
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>

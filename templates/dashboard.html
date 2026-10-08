@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Laptech World</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+        :root {
+            --bg: #05070d; --panel: #0f1729; --panel-2: #0a1120;
+            --border: #1e2a44; --accent: #38bdf8; --accent-2: #2563eb;
+            --text: #e5e7eb; --muted: #8ea0c4; --danger: #ef4444;
+        }
+        * { box-sizing: border-box; }
+        html, body {
+            background-color: var(--bg) !important;
+            font-family: 'Poppins', Arial, sans-serif !important;
+            color: var(--text); margin: 0;
+        }
+        body {
+            background-image:
+                radial-gradient(circle at 15% 0%, rgba(56, 189, 248, 0.10), transparent 45%),
+                radial-gradient(circle at 85% 100%, rgba(37, 99, 235, 0.10), transparent 45%);
+            min-height: 100vh; position: relative; overflow-x: hidden;
+        }
+        .star {
+            position: fixed; width: 3px; height: 3px; background: #38bdf8;
+            border-radius: 50%; opacity: 0.6; animation: twinkle 3s ease-in-out infinite;
+            z-index: 0; pointer-events: none;
+        }
+        @keyframes twinkle { 0%, 100% { opacity: 0.15; } 50% { opacity: 1; } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+        .navbar {
+            background: rgba(15, 23, 41, 0.9) !important; backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border); padding: 16px 30px !important;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.5); position: relative; z-index: 2;
+        }
+        .navbar-brand { display: flex; align-items: center; gap: 16px; }
+        .navbar-brand img {
+            width: 70px; height: 70px; border-radius: 50%; object-fit: cover;
+            filter: drop-shadow(0 0 8px rgba(56,189,248,1));
+        }
+        .navbar-brand h2 { margin: 0; font-size: 24px; font-weight: 800; color: #7dd3fc; }
+        .navbar-brand span { display: block; font-size: 10.5px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+        .navbar a.logout-link {
+            color: var(--muted) !important; text-decoration: none; font-weight: 600; font-size: 13px;
+            padding: 9px 18px; border: 1px solid var(--border); border-radius: 8px; transition: all 0.2s ease;
+        }
+        .navbar a.logout-link:hover { color: #04101f !important; background: linear-gradient(90deg, var(--accent-2), var(--accent)); }
+
+        .container { position: relative; z-index: 1; width: 95%; max-width: 1400px; margin: 30px auto 50px; }
+        .dash-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; margin-bottom: 6px; }
+        .container h1 { font-size: 32px; font-weight: 800; margin: 0; color: #38bdf8; }
+
+        /* Filter Selector */
+        .filter-box {
+            display: flex; align-items: center; gap: 10px; background: rgba(15, 23, 41, 0.92);
+            border: 1px solid var(--border); padding: 8px 16px; border-radius: 12px;
+        }
+        .filter-box label { font-size: 13px; color: var(--muted); font-weight: 600; }
+        .filter-box select {
+            background: var(--panel-2); color: var(--text); border: 1px solid var(--accent);
+            padding: 6px 12px; border-radius: 8px; font-family: inherit; font-size: 13px; cursor: pointer; outline: none;
+        }
+
+        .dash-underline { width: 60px; height: 4px; border-radius: 4px; margin: 12px 0 30px; background: linear-gradient(90deg, var(--accent-2), var(--accent)); }
+
+        .menu { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 40px; }
+        .menu a {
+            display: inline-flex; align-items: center; gap: 8px; background: rgba(15, 23, 41, 0.9);
+            border: 1px solid var(--border); color: var(--text) !important; text-decoration: none;
+            font-weight: 600; font-size: 14px; padding: 12px 24px; border-radius: 999px; transition: all 0.25s ease;
+        }
+        .menu a:hover { border-color: var(--accent); color: var(--accent) !important; background: rgba(56,189,248,0.06); }
+
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 22px; }
+        .card {
+            background: rgba(15, 23, 41, 0.9) !important; border: 2px solid var(--border);
+            border-radius: 18px; padding: 28px 26px; box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            transition: transform 0.2s ease, border-color 0.25s ease; animation: fadeUp 0.6s ease-out both;
+        }
+        .card:hover { transform: translateY(-6px); border-color: var(--accent); }
+        .card .icon-badge {
+            width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
+            font-size: 30px; margin-bottom: 16px; background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.25);
+        }
+        .card h3 { margin: 0 0 10px; font-size: 12.5px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); }
+        .card p { margin: 0; font-size: 26px; font-weight: 800; color: #ffffff; }
+        .card.due-card p { color: #f87171; }
+
+        .card { position: relative; }
+        .hist-link {
+            position: absolute; top: 16px; right: 16px;
+            font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+            color: var(--accent); text-decoration: none;
+            padding: 5px 11px; border-radius: 999px;
+            border: 1px solid rgba(56,189,248,0.35);
+            background: rgba(56,189,248,0.10);
+            transition: all 0.2s ease;
+        }
+        .hist-link:hover { background: var(--accent); color: #04101f; }
+    </style>
+</head>
+<body>
+
+<div id="stars"></div>
+
+<div class="navbar">
+    <div class="navbar-brand">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Laptech World">
+        <div>
+            <h2>Laptech World</h2>
+            <span>Management System</span>
+        </div>
+    </div>
+<div style="display: flex; gap: 10px; align-items: center;">
+        <a href="{{ url_for('account') }}" class="logout-link">⚙️ Settings</a>
+        <a href="/logout" class="logout-link">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="dash-head">
+        <h1>Dashboard</h1>
+
+        <div class="filter-box">
+            <label for="timeFilter">📅 History Filter:</label>
+            <select id="timeFilter" onchange="applyFilter(this.value)">
+                <option value="today" {% if filter_type == 'today' %}selected{% endif %}>Today's Activity</option>
+                <option value="yesterday" {% if filter_type == 'yesterday' %}selected{% endif %}>Yesterday</option>
+                <option value="7days" {% if filter_type == '7days' %}selected{% endif %}>Last 7 Days</option>
+                <option value="month" {% if filter_type == 'month' %}selected{% endif %}>This Month</option>
+                <option value="year" {% if filter_type == 'year' %}selected{% endif %}>This Year</option>
+                <option value="all" {% if filter_type == 'all' %}selected{% endif %}>Lifetime / All Time</option>
+            </select>
+        </div>
+    </div>
+    <div class="dash-underline"></div>
+
+    <div class="menu">
+        <a href="/products">📱 Products</a>
+        <a href="/customers">👥 Customers</a>
+        <a href="/sales">🛒 Sales</a>
+        <a href="/purchases">📦 Purchases</a>
+        <a href="/suppliers">💳 Suppliers</a>
+        <a href="/stock">📊 Stock</a>
+        <a href="/trash">🗑 Trash</a>
+    </div>
+
+    <div class="cards">
+        <div class="card">
+            <a class="hist-link" href="{{ url_for('history', block='sales') }}">History</a>
+            <div class="icon-badge">💰</div>
+            <h3>Total Sales</h3>
+            <p>Rs. {{ "%.2f"|format(sales_amount) }}</p>
+        </div>
+
+        <div class="card">
+            <a class="hist-link" href="{{ url_for('history', block='purchase') }}">History</a>
+            <div class="icon-badge">📦</div>
+            <h3>Total Purchase</h3>
+            <p>Rs. {{ "%.2f"|format(purchase_amount) }}</p>
+        </div>
+
+        <div class="card">
+            <a class="hist-link" href="{{ url_for('history', block='profit') }}">History</a>
+            <div class="icon-badge">📈</div>
+            <h3>Net Profit</h3>
+            <p>Rs. {{ "%.2f"|format(profit_amount) }}</p>
+        </div>
+
+        <div class="card due-card">
+            <a class="hist-link" href="{{ url_for('history', block='dues') }}">History</a>
+            <div class="icon-badge">🚨</div>
+            <h3>Supplier Dues (Dene Hain)</h3>
+            <p>Rs. {{ "%.2f"|format(total_supplier_dues) }}</p>
+        </div>
+
+        <div class="card">
+            <a class="hist-link" href="{{ url_for('history', block='stock') }}">History</a>
+            <div class="icon-badge">🗃️</div>
+            <h3>Total Stock</h3>
+            <p>{{ total_stock_qty }} Units</p>
+        </div>
+
+        <div class="card">
+            <a class="hist-link" href="{{ url_for('history', block='sales_count') }}">History</a>
+            <div class="icon-badge">🧾</div>
+            <h3>Sales Count (Items Sold)</h3>
+            <p>{{ sales_count }} Items</p>
+        </div>
+
+        <div class="card">
+            <a class="hist-link" href="{{ url_for('history', block='sold_cost') }}">History</a>
+            <div class="icon-badge">🏷️</div>
+            <h3>Sold Items Cost</h3>
+            <p>Rs. {{ "%.2f"|format(sold_purchase_cost) }}</p>
+        </div>
+
+        <div class="card">
+            <a class="hist-link" href="{{ url_for('history', block='purchase_count') }}">History</a>
+            <div class="icon-badge">🛍️</div>
+            <h3>Purchase Count (Items Bought)</h3>
+            <p>{{ purchase_count }} Items</p>
+        </div>
+
+        <div class="card">
+            <a class="hist-link" href="{{ url_for('history', block='stock') }}">History</a>
+            <div class="icon-badge">💎</div>
+            <h3>Stock Value (Purchase Price)</h3>
+            <p>Rs. {{ "%.2f"|format(stock_value) }}</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function applyFilter(val) {
+        window.location.href = "/?filter=" + val;
+    }
+
+    const starsContainer = document.getElementById("stars");
+    for (let i = 0; i < 45; i++) {
+        const star = document.createElement("div");
+        star.className = "star";
+        star.style.top = Math.random() * 100 + "vh";
+        star.style.left = Math.random() * 100 + "vw";
+        star.style.animationDelay = (Math.random() * 3) + "s";
+        starsContainer.appendChild(star);
+    }
+</script>
+
+</body>
+</html>

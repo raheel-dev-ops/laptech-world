@@ -1,0 +1,2713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - Laptech World</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        :root {
+            --bg: #05070d;
+            --panel: #0f1729;
+            --panel-2: #0a1224;
+            --border: #1e2a44;
+            --accent: #38bdf8;
+            --accent-2: #2563eb;
+            --text: #e5e7eb;
+            --muted: #8ea0c4;
+            --danger: #f87171;
+            --success: #4ade80;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', Arial, sans-serif;
+            background-color: var(--bg);
+            background-image:
+                radial-gradient(circle at 15% 0%, rgba(56, 189, 248, 0.10), transparent 45%),
+                radial-gradient(circle at 85% 100%, rgba(37, 99, 235, 0.08), transparent 45%);
+            background-attachment: fixed;
+            color: var(--text);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .watermark {
+            display: none;
+        }
+
+        .print-extra {
+            display: none;
+        }
+
+        #paymentDisplayBox,
+        #paymentForm {
+            display: none;
+        }
+
+        #paymentDisplayBox.show {
+            display: flex;
+        }
+
+        #paymentForm.show {
+            display: block;
+        }
+
+        .star {
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            background: #38bdf8;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: twinkle 3s ease-in-out infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.15; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .invoice-box {
+            position: relative;
+            z-index: 1;
+            width: 1050px;
+            max-width: 95%;
+            margin: 30px auto 50px;
+            background: rgba(15, 23, 41, 0.94);
+            border: 1px solid var(--border);
+            padding: 36px;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5), inset -40px 0 60px -40px rgba(56,189,248,0.22);
+            animation: fadeUp 0.6s ease-out both;
+        }
+
+        .invoice-box::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), var(--accent), transparent);
+            opacity: 0.85;
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding-bottom: 22px;
+            margin-bottom: 22px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .brand img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            filter: drop-shadow(0 0 8px rgba(56,189,248,1)) drop-shadow(0 0 20px rgba(37,99,235,0.9));
+        }
+
+        .shop-name {
+            font-size: 30px;
+            font-weight: 800;
+            color: #7dd3fc;
+            line-height: 1.1;
+            filter: drop-shadow(0 0 14px rgba(56,189,248,0.8)) drop-shadow(0 0 26px rgba(56,189,248,0.5));
+        }
+
+        .shop-subtitle {
+            margin-top: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .invoice-info {
+            text-align: right;
+        }
+
+        .invoice-info h2 {
+            margin: 0 0 10px;
+            font-size: 30px;
+            font-weight: 800;
+            color: #38bdf8;
+            text-shadow: 0 0 20px rgba(56,189,248,0.6), 0 0 40px rgba(56,189,248,0.3);
+        }
+
+        .invoice-number {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #7dd3fc;
+            background: rgba(56,189,248,0.12);
+            border: 1px solid rgba(56,189,248,0.35);
+        }
+
+        .invoice-date {
+            margin-top: 8px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .customer-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px 40px;
+            background: var(--panel-2);
+            border: 1px solid rgba(56,189,248,0.3);
+            border-left: 4px solid var(--accent-2);
+            padding: 18px 22px;
+            border-radius: 12px;
+            margin-bottom: 26px;
+            box-shadow: 0 0 26px rgba(56,189,248,0.08);
+        }
+
+        .customer-box p {
+            margin: 0;
+            font-size: 14.5px;
+            color: #ffffff;
+        }
+
+        .customer-box p strong {
+            display: block;
+            margin-bottom: 3px;
+            font-size: 11.5px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .payment-actions {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+        }
+
+        .payment-btn {
+            background: rgba(56,189,248,0.12);
+            color: #7dd3fc;
+            border: 1px solid rgba(56,189,248,0.35);
+            padding: 9px 16px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .payment-btn:hover {
+            background: rgba(56,189,248,0.24);
+        }
+
+        .payment-form-box {
+            background: var(--panel-2);
+            border: 1px solid rgba(56,189,248,0.3);
+            border-left: 4px solid var(--accent-2);
+            padding: 18px 22px;
+            border-radius: 12px;
+            margin-bottom: 26px;
+        }
+
+        .payment-form-box .field {
+            margin-bottom: 14px;
+        }
+
+        .payment-form-box label {
+            display: block;
+            font-size: 11.5px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+        .payment-form-box input {
+            width: 100%;
+            max-width: 320px;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #0a0f1c;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .payment-form-box input:focus {
+            border-color: var(--accent);
+        }
+
+        .save-payment-btn, .cancel-payment-btn {
+            padding: 9px 18px;
+            border-radius: 8px;
+            border: none;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .save-payment-btn {
+            background: linear-gradient(90deg, var(--accent-2), var(--accent));
+            color: #04101f;
+        }
+
+        .cancel-payment-btn {
+            background: var(--panel-2);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            min-width: 980px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border-bottom: 1px solid var(--border);
+            padding: 14px 10px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 13.5px;
+        }
+
+        th {
+            background: var(--panel-2);
+            color: var(--accent);
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        tbody tr:hover td {
+            background: rgba(56,189,248,0.06);
+        }
+
+        .cat-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            background: rgba(56,189,248,0.12);
+            color: #7dd3fc;
+            border: 1px solid rgba(56,189,248,0.35);
+        }
+
+        .prod-name {
+            display: inline-block;
+            font-weight: 700;
+            color: #ffffff;
+            background: rgba(255,255,255,0.03);
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .price-cell {
+            white-space: nowrap;
+        }
+
+        .total-row td {
+            border-bottom: none;
+            padding: 18px 12px;
+            background: rgba(56,189,248,0.06);
+        }
+
+        .total-label {
+            text-align: right;
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .total-value {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--success);
+            text-shadow: 0 0 16px rgba(74,222,128,0.5);
+            white-space: nowrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-radius: 9px;
+            text-decoration: none;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 700;
+            line-height: 1;
+            transition: all 0.15s ease;
+        }
+
+        .btn-lg {
+            width: 170px;
+            height: 46px;
+            font-size: 14px;
+        }
+
+        .btn-sm {
+            width: 76px;
+            height: 34px;
+            font-size: 12.5px;
+        }
+
+        .btn[disabled] {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        .print-btn {
+            background: linear-gradient(90deg, var(--accent-2), var(--accent));
+            color: #04101f;
+        }
+
+        .print-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(56,189,248,0.45);
+        }
+
+        .share-btn {
+            background: linear-gradient(90deg, #7c3aed, #38bdf8);
+            color: #04101f;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(124,58,237,0.45);
+        }
+
+        .wa-btn {
+            background: linear-gradient(90deg, #16a34a, #25d366);
+            color: #04150b;
+        }
+
+        .wa-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(37,211,102,0.45);
+        }
+
+        .back-btn {
+            background: rgba(56,189,248,0.10);
+            color: #7dd3fc;
+            border: 1px solid rgba(56,189,248,0.4);
+        }
+
+        .back-btn:hover {
+            background: rgba(56,189,248,0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 0 0 3px rgba(56,189,248,0.15), 0 0 22px rgba(56,189,248,0.25);
+        }
+
+        .edit-btn {
+            background: rgba(37,99,235,0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(37,99,235,0.35);
+        }
+
+        .edit-btn:hover {
+            background: rgba(37,99,235,0.3);
+        }
+
+        .return-btn {
+            background: rgba(74,222,128,0.14);
+            color: #4ade80;
+            border: 1px solid rgba(74,222,128,0.35);
+        }
+
+        .return-btn:hover {
+            background: rgba(74,222,128,0.26);
+        }
+
+        .delete-btn {
+            background: rgba(248,113,113,0.12);
+            color: var(--danger);
+            border: 1px solid rgba(248,113,113,0.32);
+        }
+
+        .delete-btn:hover {
+            background: rgba(248,113,113,0.26);
+        }
+
+        .item-actions-box {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: nowrap;
+        }
+
+        .item-actions-box form,
+        .actions form {
+            margin: 0;
+            display: flex;
+        }
+
+        .actions {
+            display: flex;
+            gap: 14px;
+            margin-top: 28px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .footer {
+            margin-top: 32px;
+            padding: 22px 20px;
+            text-align: center;
+            border-radius: 14px;
+            background: var(--panel-2);
+            border: 1px solid rgba(56,189,248,0.25);
+            box-shadow: 0 0 26px rgba(56,189,248,0.08);
+        }
+
+        .footer .thanks {
+            font-size: 17px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .footer .thanks span {
+            color: #7dd3fc;
+            text-shadow: 0 0 14px rgba(56,189,248,0.6);
+        }
+
+        .footer .tagline {
+            margin-top: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .footer .note {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed var(--border);
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        /* ==============================
+           PAYMENT SUMMARY / SPECIAL INSTRUCTION /
+           SIGNATURE / CONTACT
+        ============================== */
+
+        .print-summary-row {
+            display: flex;
+            align-items: stretch;
+            justify-content: space-between;
+            gap: 28px;
+            margin-top: 18px;
+            margin-bottom: 18px;
+        }
+
+        .print-payment-summary {
+            flex: 1;
+            min-width: 0;
+            padding: 16px 20px;
+            border: 1px solid #38bdf8 !important;
+            border-left: 6px solid #1d4ed8 !important;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #e0f2fe, #f0f9ff) !important;
+            box-shadow: 0 0 18px rgba(56,189,248,0.35) !important;
+        }
+
+        .print-payment-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 17px;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: #000000 !important;
+        }
+
+        .print-payment-title svg {
+            stroke: #000000 !important;
+        }
+
+        .print-payment-values {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+            flex-wrap: wrap;
+        }
+
+        .print-payment-item {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .print-payment-item .payment-label {
+            font-size: 10.5px;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: #000000 !important;
+        }
+
+        .print-payment-item .payment-value {
+            font-size: 19px;
+            font-weight: 800;
+            line-height: 1.15;
+            color: #000000 !important;
+            white-space: nowrap;
+        }
+
+        .print-grand-total {
+            flex: 0 0 300px;
+            padding: 16px 22px;
+            text-align: right;
+            border: 1px solid #38bdf8;
+            border-left: 6px solid #1d4ed8;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+            box-shadow: 0 0 18px rgba(56,189,248,0.35);
+        }
+
+        .print-grand-total .label {
+            display: inline-block;
+            margin-bottom: 6px;
+            padding: 3px 12px;
+            border-radius: 999px;
+            font-size: 10.5px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #000000 !important;
+            background: #ffffff;
+            border: 1px solid #38bdf8;
+        }
+
+        .print-grand-total .value {
+            display: block;
+            font-size: 19px !important;
+            font-weight: 800;
+            color: #000000 !important;
+            line-height: 1.15;
+            white-space: nowrap;
+        }
+
+        .print-extra .si-box {
+            margin-top: 18px;
+            padding: 14px 18px;
+            border: 1px solid #38bdf8;
+            border-radius: 12px;
+            background: #f0f9ff;
+            box-shadow: 0 0 14px rgba(56,189,248,0.4);
+        }
+
+        .print-extra .si-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 16px;
+            font-weight: 800;
+            color: #000000 !important;
+        }
+
+        .print-extra .si-text {
+            padding-left: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.6;
+            color: #000000 !important;
+        }
+
+        .print-extra .contact-row {
+            display: flex;
+            align-items: center;
+            margin-top: 22px;
+            margin-bottom: 22px;
+        }
+
+        .print-extra .sign-col {
+            flex: 1;
+            padding: 0 22px;
+            text-align: center;
+        }
+
+        .print-extra .sign-img {
+            display: block;
+            width: 130px;
+            max-height: 60px;
+            object-fit: contain;
+            margin: 0 auto -6px;
+            mix-blend-mode: multiply;
+        }
+
+        .print-extra .sign-line {
+            margin-top: 20px;
+            margin-bottom: 8px;
+            border-top: 2px dashed #94a3b8;
+        }
+
+        .print-extra .sign-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #000000 !important;
+        }
+
+        .print-extra .info-col {
+            flex: 1.7;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            padding-left: 24px;
+            border-left: 2px solid #bae6fd;
+        }
+
+        .print-extra .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .print-extra .info-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0284c7;
+        }
+
+        .print-extra .info-value {
+            font-size: 14px;
+            font-weight: 800;
+            line-height: 1.4;
+            color: #000000 !important;
+            text-transform: uppercase;
+        }
+
+        /* ==============================
+           PRINT / WHATSAPP WEB / SHARE POPUP
+        ============================== */
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+            background: rgba(2, 6, 14, 0.78);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            position: relative;
+            width: 480px;
+            max-width: 100%;
+            background: rgba(15, 23, 41, 0.98);
+            border: 1px solid rgba(56,189,248,0.4);
+            border-radius: 18px;
+            padding: 28px;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.7), 0 0 50px rgba(56,189,248,0.2);
+            animation: fadeUp 0.25s ease-out both;
+        }
+
+        .modal::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), var(--accent), transparent);
+        }
+
+        .modal h3 {
+            margin: 0 0 6px;
+            font-size: 20px;
+            font-weight: 800;
+            color: #7dd3fc;
+            text-shadow: 0 0 16px rgba(56,189,248,0.5);
+        }
+
+        .modal .sub {
+            margin: 0 0 20px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .modal label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 11.5px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 12px 13px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--panel-2);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .modal input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(56,189,248,0.2);
+        }
+
+        .modal .hint {
+            margin-top: 6px;
+            font-size: 11.5px;
+            color: var(--muted);
+        }
+
+        .modal .error {
+            display: none;
+            margin-top: 10px;
+            padding: 9px 12px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--danger);
+            background: rgba(248,113,113,0.12);
+            border: 1px solid rgba(248,113,113,0.3);
+        }
+
+        .modal .info {
+            display: none;
+            margin-top: 10px;
+            padding: 9px 12px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #7dd3fc;
+            background: rgba(56,189,248,0.12);
+            border: 1px solid rgba(56,189,248,0.3);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .modal-actions .btn {
+            flex: 1;
+            height: 46px;
+            font-size: 14px;
+        }
+
+        .modal-actions.three .btn {
+            font-size: 13px;
+        }
+
+        .cancel-link {
+            display: block;
+            width: 100%;
+            margin-top: 14px;
+            padding: 8px;
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .cancel-link:hover {
+            color: var(--accent);
+        }
+
+        @media (max-width: 700px) {
+
+            .invoice-box {
+                padding: 18px;
+            }
+
+            .top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .invoice-info {
+                text-align: left;
+            }
+
+            .brand img {
+                width: 64px;
+                height: 64px;
+            }
+
+            .shop-name,
+            .invoice-info h2 {
+                font-size: 22px;
+            }
+
+            .btn-lg {
+                width: 100%;
+            }
+
+            .actions form {
+                width: 100%;
+            }
+
+            .modal-actions {
+                flex-direction: column;
+            }
+
+            .print-summary-row {
+                flex-direction: column;
+                gap: 14px;
+            }
+
+            .print-grand-total {
+                flex: 1;
+                width: 100%;
+            }
+
+            .print-payment-values {
+                gap: 18px;
+            }
+
+        }
+
+        /* ==================================================
+           PRINT: white page, rounded glowing card, big text
+        ================================================== */
+
+        @media print {
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            html, body {
+                background: #ffffff !important;
+                background-image: none !important;
+                color: #111111 !important;
+                min-height: 0 !important;
+                height: auto !important;
+                overflow: visible !important;
+            }
+
+            .star,
+            #stars,
+            .actions,
+            .item-actions,
+            .modal-overlay,
+            .total-row,
+            #paymentDisplayBox,
+            #paymentForm {
+                display: none !important;
+            }
+
+            .print-extra {
+                display: block !important;
+            }
+
+            .watermark {
+                display: block;
+                position: fixed;
+                top: 52%;
+                left: 50%;
+                width: 150mm;
+                height: 150mm;
+                transform: translate(-50%, -50%);
+                border-radius: 50%;
+                object-fit: cover;
+                opacity: 0.20;
+                z-index: 0;
+            }
+
+            .invoice-box {
+                position: relative;
+                z-index: 1;
+                display: flex;
+                flex-direction: column;
+                width: auto;
+                max-width: none;
+                margin: 6mm;
+                padding: 10mm 9mm 9mm;
+                background: transparent !important;
+                border: 2px solid #38bdf8;
+                border-radius: 18px;
+                animation: none;
+                overflow: hidden;
+                page-break-inside: avoid;
+                box-shadow:
+                    0 0 22px rgba(56,189,248,0.55),
+                    inset 26px 0 34px -22px rgba(56,189,248,0.55),
+                    inset -26px 0 34px -22px rgba(56,189,248,0.55);
+            }
+
+            .invoice-box::before {
+                height: 6px;
+                background: linear-gradient(90deg, #1d4ed8, #38bdf8, #1d4ed8);
+                opacity: 1;
+            }
+
+            .top {
+                border-bottom: 2px solid #38bdf8;
+                padding-bottom: 12px;
+                margin-bottom: 14px;
+            }
+
+            .brand {
+                gap: 16px;
+            }
+
+            .brand img {
+                width: 82px;
+                height: 82px;
+                filter: drop-shadow(0 0 6px rgba(56,189,248,1)) drop-shadow(0 0 16px rgba(37,99,235,0.8));
+            }
+
+            .shop-name {
+                font-size: 30px;
+                color: #0ea5e9;
+                filter: drop-shadow(0 0 10px rgba(56,189,248,0.75));
+            }
+
+            .shop-subtitle {
+                font-size: 11px;
+                color: #475569;
+            }
+
+            .invoice-info h2 {
+                font-size: 30px;
+                color: #0ea5e9;
+                text-shadow: 0 0 14px rgba(56,189,248,0.6);
+                letter-spacing: 2px;
+            }
+
+            .invoice-number {
+                font-size: 14px;
+                color: #0369a1;
+                background: #e0f2fe;
+                border: 1px solid #38bdf8;
+            }
+
+            .invoice-date {
+                font-size: 13px;
+                color: #475569;
+            }
+
+            .customer-box {
+                background: rgba(241,245,249,0.85);
+                border: 1px solid #bae6fd;
+                border-left: 5px solid #2563eb;
+                box-shadow: none;
+                margin-bottom: 14px;
+                padding: 12px 16px;
+            }
+
+            .customer-box p {
+                font-size: 15px;
+                color: #0f172a;
+            }
+
+            .customer-box p strong {
+                font-size: 11px;
+                color: #475569;
+            }
+
+            .table-wrap {
+                overflow: hidden;
+                border: 1px solid #7dd3fc;
+                border-radius: 10px;
+                background: rgba(255,255,255,0.6);
+            }
+
+            table {
+                min-width: 0;
+                width: 100%;
+                table-layout: fixed;
+            }
+
+            th:nth-child(1), td:nth-child(1) { width: 5%; }
+            th:nth-child(2), td:nth-child(2) { width: 16%; }
+            th:nth-child(3), td:nth-child(3) { width: 19%; }
+            th:nth-child(4), td:nth-child(4) { width: 11%; }
+            th:nth-child(5), td:nth-child(5) { width: 19%; }
+            th:nth-child(6), td:nth-child(6) { width: 5%; }
+            th:nth-child(7), td:nth-child(7) { width: 12.5%; }
+            th:nth-child(8), td:nth-child(8) { width: 12.5%; }
+
+            th {
+                background: #1d4ed8 !important;
+                color: #ffffff !important;
+                font-size: 10px;
+                padding: 8px 3px;
+                border-bottom: none;
+                word-break: break-word;
+            }
+
+            td {
+                color: #0f172a;
+                background: transparent !important;
+                border-bottom: 1px solid #bae6fd;
+                padding: 9px 3px;
+                font-size: 11.5px;
+                word-break: break-word;
+            }
+
+            .price-cell {
+                font-size: 11px;
+                white-space: nowrap;
+            }
+
+            .cat-badge {
+                font-size: 9.5px;
+                padding: 3px 7px;
+                background: #e0f2fe;
+                color: #0c4a6e;
+                border: 1px solid #38bdf8;
+            }
+
+            .prod-name {
+                font-size: 11.5px;
+                padding: 4px 7px;
+                background: rgba(255,255,255,0.9);
+                color: #0f172a;
+                border: 1px solid #94a3b8;
+            }
+
+            .print-summary-row {
+                display: flex;
+                align-items: stretch;
+                justify-content: space-between;
+                gap: 24px;
+                margin-top: 14px;
+                margin-bottom: 14px;
+            }
+
+            .print-payment-summary {
+                flex: 1;
+                min-width: 0;
+                padding: 12px 15px;
+                border: 1px solid #38bdf8 !important;
+                border-left: 5px solid #1d4ed8 !important;
+                border-radius: 12px;
+                background: linear-gradient(135deg, #e0f2fe, #f0f9ff) !important;
+                box-shadow: 0 0 12px rgba(56,189,248,0.30) !important;
+            }
+
+            .print-payment-title {
+                gap: 8px;
+                margin-bottom: 8px;
+                font-size: 14px;
+                letter-spacing: 0.6px;
+                color: #000000 !important;
+            }
+
+            .print-payment-title svg {
+                width: 22px;
+                height: 22px;
+                stroke: #000000 !important;
+            }
+
+            .print-payment-values {
+                gap: 20px;
+            }
+
+            .print-payment-item {
+                gap: 2px;
+            }
+
+            .print-payment-item .payment-label {
+                font-size: 9px;
+                color: #000000 !important;
+            }
+
+            .print-payment-item .payment-value {
+                font-size: 15px;
+                color: #000000 !important;
+            }
+
+            .print-grand-total {
+                flex: 0 0 250px;
+                padding: 12px 16px;
+                border: 1px solid #38bdf8;
+                border-left: 5px solid #1d4ed8;
+                border-radius: 12px;
+                background: linear-gradient(135deg, #e0f2fe, #f0f9ff) !important;
+                box-shadow: 0 0 12px rgba(56,189,248,0.30);
+            }
+
+            .print-grand-total .label {
+                margin-bottom: 4px;
+                padding: 3px 10px;
+                font-size: 9px;
+                color: #000000 !important;
+                background: #ffffff;
+                border: 1px solid #38bdf8;
+            }
+
+            .print-grand-total .value {
+                font-size: 15px !important;
+                color: #000000 !important;
+            }
+
+            .print-extra .si-box {
+                margin-top: 12px;
+                padding: 10px 14px;
+            }
+
+            .print-extra .si-title {
+                font-size: 14px;
+                margin-bottom: 5px;
+                color: #000000 !important;
+            }
+
+            .print-extra .si-text {
+                font-size: 12.5px;
+                line-height: 1.4;
+                color: #000000 !important;
+            }
+
+            .print-extra .contact-row {
+                margin-top: 14px;
+                margin-bottom: 14px;
+            }
+
+            .print-extra .info-item {
+                gap: 10px;
+            }
+
+            .print-extra .info-label {
+                font-size: 11px;
+            }
+
+            .print-extra .info-value {
+                font-size: 12.5px;
+                color: #000000 !important;
+            }
+
+            .footer {
+                margin-top: 12px;
+                padding: 12px;
+                background: rgba(248,250,252,0.85);
+                border: 1px solid #bae6fd;
+                border-top: 3px solid #2563eb;
+                box-shadow: none;
+                page-break-inside: avoid;
+                page-break-after: avoid;
+            }
+
+            .footer .thanks {
+                font-size: 16px;
+                color: #0f172a;
+            }
+
+            .footer .thanks span {
+                color: #0ea5e9;
+                text-shadow: none;
+            }
+
+            .footer .tagline {
+                font-size: 11px;
+                color: #475569;
+            }
+
+            .footer .note {
+                font-size: 11.5px;
+                color: #475569;
+                border-color: #bae6fd;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div id="stars"></div>
+
+<img class="watermark" src="{{ url_for('static', filename='images/logo.png') }}" alt="">
+
+<div class="invoice-box" id="invoiceBox">
+
+    <div class="top">
+
+        <div class="brand">
+
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Laptech World">
+
+            <div>
+                <div class="shop-name">Laptech World</div>
+                <div class="shop-subtitle">Mobile &amp; Laptop Shop</div>
+            </div>
+
+        </div>
+
+        <div class="invoice-info">
+            <h2>INVOICE</h2>
+            <span class="invoice-number">{{ invoice.invoice_number }}</span>
+            <div class="invoice-date">{{ invoice.invoice_date.strftime('%d-%m-%Y %I:%M %p') }}</div>
+        </div>
+
+    </div>
+
+
+    <div class="customer-box">
+
+        <p>
+            <strong>Customer Name</strong>
+            {{ invoice.customer_name }}
+        </p>
+
+        <p>
+            <strong>Phone</strong>
+            {{ invoice.customer_phone or 'N/A' }}
+        </p>
+
+    </div>
+
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Category</th>
+                    <th>Product</th>
+                    <th>Brand</th>
+                    <th>IMEI / Serial</th>
+                    <th>Qty</th>
+                    <th>Sale Price</th>
+                    <th>Total</th>
+                    <th class="item-actions">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% set grand_total = namespace(value=0) %}
+
+                {% for item in invoice.items %}
+
+                    {% set item_total = item.sale_price * item.quantity %}
+                    {% set grand_total.value = grand_total.value + item_total %}
+
+                    <tr>
+
+                        <td>{{ loop.index }}</td>
+
+                        <td><span class="cat-badge">{{ item.category }}</span></td>
+
+                        <td><span class="prod-name">{{ item.product_name or '-' }}</span></td>
+
+                        <td>{{ item.brand or '-' }}</td>
+
+                        <td>
+                            {% if item.imei %}
+                                {{ item.imei }}
+                            {% elif item.serial_number %}
+                                {{ item.serial_number }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+
+                        <td>{{ item.quantity }}</td>
+
+                        <td class="price-cell">Rs. {{ "%.2f"|format(item.sale_price) }}</td>
+
+                        <td class="price-cell">Rs. {{ "%.2f"|format(item_total) }}</td>
+
+                        <td class="item-actions">
+
+                            <div class="item-actions-box">
+
+                                <a class="btn btn-sm edit-btn" href="{{ url_for('edit_invoice_item', item_id=item.id) }}">Edit</a>
+
+                                <form method="POST" action="{{ url_for('delete_invoice_item', item_id=item.id) }}" onsubmit="return confirm('Customer wapas kar raha hai? Stock wapas add hoga aur ye item Trash mein jayega (wahan se restore ho sakta hai).');">
+                                    <input type="hidden" name="restock" value="yes">
+                                    <button type="submit" class="btn btn-sm return-btn">Return</button>
+                                </form>
+
+                                <form method="POST" action="{{ url_for('delete_invoice_item', item_id=item.id) }}" onsubmit="return confirm('Ye item bina stock badle Trash mein bhej dein? (Wahan se restore ho sakta hai)');">
+                                    <input type="hidden" name="restock" value="no">
+                                    <button type="submit" class="btn btn-sm delete-btn">Delete Only</button>
+                                </form>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                <tr class="total-row">
+
+                    <td colspan="7" class="total-label">
+                        Grand Total
+                    </td>
+
+                    <td colspan="2" class="total-value">
+                        Rs. {{ "%.2f"|format(grand_total.value) }}
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- PAYMENT STATUS (screen only) -->
+
+    {% set paid_amt = invoice.paid_amount if invoice.paid_amount is not none else grand_total.value %}
+    {% set remaining_amt = grand_total.value - paid_amt %}
+
+    <div class="customer-box show" id="paymentDisplayBox" style="margin-top:20px;">
+
+        <p>
+            <strong>Grand Total</strong>
+            Rs. {{ "%.2f"|format(grand_total.value) }}
+        </p>
+
+        <p>
+            <strong>Paid</strong>
+            Rs. {{ "%.2f"|format(paid_amt) }}
+        </p>
+
+        <p>
+            <strong style="{{ 'color:#f87171;' if remaining_amt > 0.009 else '' }}">Remaining</strong>
+            <span style="{{ 'color:#f87171; font-weight:700;' if remaining_amt > 0.009 else '' }}">
+                Rs. {{ "%.2f"|format(remaining_amt) }}
+            </span>
+        </p>
+
+        {% if remaining_amt > 0.009 %}
+        <div class="payment-actions">
+            <button type="button" class="payment-btn" onclick="togglePaymentForm()">💰 Add Payment</button>
+        </div>
+        {% endif %}
+
+    </div>
+
+    {% if remaining_amt > 0.009 %}
+    <form class="payment-form-box" id="paymentForm" method="POST" action="{{ url_for('update_invoice_payment', invoice_id=invoice.id) }}">
+
+        <div class="field">
+            <label>Additional Payment (Remaining: Rs. {{ "%.2f"|format(remaining_amt) }})</label>
+            <input type="number" step="0.01" name="additional_payment" required max="{{ remaining_amt }}">
+        </div>
+
+        <div style="display:flex; gap:10px;">
+            <button type="submit" class="save-payment-btn">Save Payment</button>
+            <button type="button" class="cancel-payment-btn" onclick="togglePaymentForm()">Cancel</button>
+        </div>
+
+    </form>
+    {% endif %}
+
+
+    <!-- PRINT / SHARE ONLY -->
+
+    {% set paid_amt = invoice.paid_amount if invoice.paid_amount is not none else grand_total.value %}
+    {% set remaining_amt = grand_total.value - paid_amt %}
+
+    <div class="print-extra">
+
+        <!-- PENDING PAYMENT + GRAND TOTAL -->
+
+        <div class="print-summary-row">
+
+            <div class="print-payment-summary">
+
+                <div class="print-payment-title">
+
+                    {% if remaining_amt > 0.009 %}
+
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+                             stroke="#000000" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 8v5"/>
+                            <circle cx="12" cy="16.5" r="0.6" fill="#000000"/>
+                        </svg>
+
+                        <span>PENDING PAYMENT</span>
+
+                    {% else %}
+
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+                             stroke="#15803d" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 6L9 17l-5-5"/>
+                        </svg>
+
+                        <span>FULLY PAID</span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="print-payment-values">
+
+                    <div class="print-payment-item">
+
+                        <div class="payment-label">
+                            Paid
+                        </div>
+
+                        <div class="payment-value">
+                            Rs. {{ "%.2f"|format(paid_amt) }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="print-payment-item">
+
+                        <div class="payment-label">
+                            Remaining
+                        </div>
+
+                        <div class="payment-value">
+                            Rs. {{ "%.2f"|format(remaining_amt) }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="print-grand-total">
+
+                <span class="label">
+                    Grand Total
+                </span>
+
+                <span class="value">
+                    Rs. {{ "%.2f"|format(grand_total.value) }}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- SPECIAL INSTRUCTION -->
+
+        <div class="si-box">
+
+            <div class="si-title">
+
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+                     stroke="#0284c7" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 8v5"/>
+                    <circle cx="12" cy="16.5" r="0.6" fill="#0284c7"/>
+                </svg>
+
+                <span>Special Instruction</span>
+
+            </div>
+
+            <div class="si-text">
+                No Damage/Dead Warranty<br>
+                20% Amount will be Deducted on Return
+            </div>
+
+        </div>
+
+
+        <!-- SIGNATURE / CONTACT / LOCATION -->
+
+        <div class="contact-row">
+
+            <div class="sign-col">
+
+                <img
+                    src="{{ url_for('static', filename='images/signature.png') }}"
+                    alt=""
+                    class="sign-img"
+                    onerror="this.style.visibility='hidden'"
+                >
+
+                <div class="sign-line"></div>
+
+                <div class="sign-label">
+                    Signature
+                </div>
+
+            </div>
+
+
+            <div class="info-col">
+
+                <div class="info-item">
+
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="#2563eb">
+                        <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/>
+                    </svg>
+
+                    <div>
+
+                        <div class="info-label">
+                            Contact
+                        </div>
+
+                        <div class="info-value">
+                            0307-9377774
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="#2563eb">
+                        <path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5c-1.4 0-2.5-1.1-2.5-2.5S10.6 6.5 12 6.5s2.5 1.1 2.5 2.5S13.4 11.5 12 11.5z"/>
+                    </svg>
+
+                    <div>
+
+                        <div class="info-label">
+                            Location
+                        </div>
+
+                        <div class="info-value">
+                            Shop No 101 1st Floor Twin City Arcade<br>
+                            Block B Main Markaz B17 Islamabad
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="actions">
+
+        <button type="button" class="btn btn-lg print-btn" onclick="openPrintModal()">
+            Print Invoice
+        </button>
+
+        <a class="btn btn-lg back-btn" href="{{ url_for('sales') }}">
+            Back to Sales
+        </a>
+
+        <form method="POST"
+              action="{{ url_for('delete_invoice', invoice_id=invoice.id) }}"
+              onsubmit="return confirm('Ye poori invoice Trash mein chali jayegi. Wahan se restore kar sakte hain. Delete karein?');">
+
+            <button type="submit" class="btn btn-lg delete-btn">
+                Delete Invoice
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <div class="footer">
+
+        <div class="thanks">
+            Thank you for shopping at <span>Laptech World</span>
+        </div>
+
+        <div class="tagline">
+            Empowering your Digital Life
+        </div>
+
+        <div class="note">
+            This is a computer generated invoice.
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- PRINT / WHATSAPP WEB / SHARE POPUP -->
+
+<div class="modal-overlay"
+     id="printModal"
+     onclick="if (event.target === this) closePrintModal()">
+
+    <div class="modal">
+
+        <h3>
+            Invoice {{ invoice.invoice_number }}
+        </h3>
+
+        <p class="sub">
+            Print karein, ya poori invoice ki image WhatsApp / kisi app par bhejein.
+        </p>
+
+        <label for="waNumber">
+            Customer WhatsApp Number (Pakistan)
+        </label>
+
+        <input
+            type="text"
+            id="waNumber"
+            value="{{ invoice.customer_phone or '' }}"
+            placeholder="03XXXXXXXXX"
+            inputmode="tel"
+        >
+
+        <div class="hint">
+            Sirf Pakistani number: 03XXXXXXXXX ya +923XXXXXXXXX
+        </div>
+
+        <div class="error" id="waError"></div>
+
+        <div class="info" id="waInfo"></div>
+
+        <div class="modal-actions three">
+
+            <button type="button"
+                    class="btn print-btn"
+                    onclick="doPrint()">
+                Print
+            </button>
+
+            <button type="button"
+                    class="btn wa-btn"
+                    id="waBtn"
+                    onclick="sendWhatsAppWeb()">
+                WhatsApp Web
+            </button>
+
+            <button type="button"
+                    class="btn share-btn"
+                    id="shareBtn"
+                    onclick="shareInvoice()">
+                Share
+            </button>
+
+        </div>
+
+        <button type="button"
+                class="cancel-link"
+                onclick="closePrintModal()">
+            Cancel
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    (function() {
+
+        const starsContainer = document.getElementById("stars");
+
+        for (let i = 0; i < 45; i++) {
+
+            const star = document.createElement("div");
+
+            star.className = "star";
+
+            star.style.top = Math.random() * 100 + "vh";
+
+            star.style.left = Math.random() * 100 + "vw";
+
+            star.style.animationDelay = (Math.random() * 3) + "s";
+
+            starsContainer.appendChild(star);
+
+        }
+
+    })();
+
+
+    function togglePaymentForm() {
+
+        const form = document.getElementById("paymentForm");
+
+        if (!form) return;
+
+        form.classList.toggle("show");
+
+    }
+
+
+    const invoiceData = {
+
+        number:
+            {{ invoice.invoice_number|tojson }},
+
+        date:
+            {{ invoice.invoice_date.strftime('%d-%m-%Y %I:%M %p')|tojson }},
+
+        customer:
+            {{ (invoice.customer_name or '')|tojson }},
+
+        phone:
+            {{ (invoice.customer_phone or 'N/A')|tojson }},
+
+        total:
+            "{{ "%.2f"|format(grand_total.value) }}",
+
+        paid:
+            "{{ "%.2f"|format(paid_amt) }}",
+
+        remaining:
+            "{{ "%.2f"|format(remaining_amt) }}",
+
+        pending:
+            {{ 'true' if remaining_amt > 0.009 else 'false' }},
+
+        logo:
+            {{ url_for('static', filename='images/logo.png')|tojson }},
+
+        signature:
+            {{ url_for('static', filename='images/signature.png')|tojson }},
+
+        items: [
+
+            {% for item in invoice.items %}
+
+            {
+
+                category:
+                    {{ (item.category or '')|tojson }},
+
+                name:
+                    {{ (item.product_name or '-')|tojson }},
+
+                brand:
+                    {{ (item.brand or '-')|tojson }},
+
+                ident:
+                    {{ (item.imei or item.serial_number or '-')|tojson }},
+
+                qty:
+                    {{ item.quantity }},
+
+                price:
+                    "{{ "%.2f"|format(item.sale_price) }}",
+
+                total:
+                    "{{ "%.2f"|format(item.sale_price * item.quantity) }}"
+
+            },
+
+            {% endfor %}
+
+        ]
+
+    };
+
+
+    // =====================================================
+    // IMAGE CACHE (modal khulte hi image background mein banti hai)
+    // =====================================================
+
+    let cachedBlob = null;       // PNG (clipboard / download)
+    let cachedJpeg = null;       // JPEG (Share)
+    let cachedPromise = null;
+
+
+    function blobToJpeg(blob) {
+
+        return new Promise(function(resolve, reject) {
+
+            const img = new Image();
+
+            const url = URL.createObjectURL(blob);
+
+            img.onload = function() {
+
+                const c = document.createElement("canvas");
+
+                c.width = img.naturalWidth;
+
+                c.height = img.naturalHeight;
+
+                const ctx = c.getContext("2d");
+
+                ctx.fillStyle = "#ffffff";
+
+                ctx.fillRect(0, 0, c.width, c.height);
+
+                ctx.drawImage(img, 0, 0);
+
+                URL.revokeObjectURL(url);
+
+                c.toBlob(function(b) {
+
+                    if (b) {
+                        resolve(b);
+                    } else {
+                        reject(new Error("JPEG creation failed"));
+                    }
+
+                }, "image/jpeg", 0.95);
+
+            };
+
+            img.onerror = function() {
+
+                URL.revokeObjectURL(url);
+
+                reject(new Error("Image load failed"));
+
+            };
+
+            img.src = url;
+
+        });
+
+    }
+
+
+    function prepareInvoiceImage() {
+
+        if (!cachedPromise) {
+
+            cachedPromise =
+                captureInvoiceBlob()
+
+                    .then(function(blob) {
+
+                        return blobToJpeg(blob).then(function(jpeg) {
+
+                            cachedBlob = blob;
+
+                            cachedJpeg = jpeg;
+
+                            return blob;
+
+                        });
+
+                    })
+
+                    .catch(function(err) {
+
+                        cachedPromise = null;
+
+                        cachedBlob = null;
+
+                        cachedJpeg = null;
+
+                        throw err;
+
+                    });
+
+        }
+
+        return cachedPromise;
+
+    }
+
+
+    function downloadBlob(blob) {
+
+        const url = URL.createObjectURL(blob);
+
+        const ext =
+            (blob.type === "image/jpeg") ? ".jpg" : ".png";
+
+        const a = document.createElement("a");
+
+        a.href = url;
+
+        a.download = "Invoice-" + invoiceData.number + ext;
+
+        document.body.appendChild(a);
+
+        a.click();
+
+        a.remove();
+
+        setTimeout(function() {
+
+            URL.revokeObjectURL(url);
+
+        }, 2000);
+
+    }
+
+
+    // =====================================================
+    // MODAL
+    // =====================================================
+
+    function openPrintModal() {
+
+        document.getElementById("waError").style.display = "none";
+
+        document.getElementById("waInfo").style.display = "none";
+
+        document.getElementById("printModal").classList.add("open");
+
+        const shareBtn = document.getElementById("shareBtn");
+
+        if (!cachedBlob) {
+
+            shareBtn.disabled = true;
+
+            shareBtn.textContent = "Wait...";
+
+            const restore = function() {
+
+                shareBtn.disabled = false;
+
+                shareBtn.textContent = "Share";
+
+            };
+
+            prepareInvoiceImage()
+                .then(restore)
+                .catch(restore);
+
+        }
+
+    }
+
+
+    function closePrintModal() {
+
+        document.getElementById("printModal").classList.remove("open");
+
+    }
+
+
+    function doPrint() {
+
+        closePrintModal();
+
+        setTimeout(function() {
+
+            window.print();
+
+        }, 150);
+
+    }
+
+
+    function showError(msg) {
+
+        const box = document.getElementById("waError");
+
+        document.getElementById("waInfo").style.display = "none";
+
+        box.textContent = msg;
+
+        box.style.display = "block";
+
+    }
+
+
+    function showInfo(msg) {
+
+        const box = document.getElementById("waInfo");
+
+        document.getElementById("waError").style.display = "none";
+
+        box.textContent = msg;
+
+        box.style.display = "block";
+
+    }
+
+
+    function setBusy(busy) {
+
+        ["waBtn", "shareBtn"].forEach(function(id) {
+
+            document.getElementById(id).disabled = busy;
+
+        });
+
+    }
+
+
+    // =====================================================
+    // IMAGE BANANE KA CODE (Print jaisa light design)
+    // =====================================================
+
+    function waitForImages(root) {
+
+        const imgs = Array.from(root.querySelectorAll("img"));
+
+        return Promise.all(
+
+            imgs.map(function(img) {
+
+                if (img.complete) {
+
+                    return Promise.resolve();
+
+                }
+
+                return new Promise(function(resolve) {
+
+                    img.addEventListener("load", resolve, { once: true });
+
+                    img.addEventListener("error", resolve, { once: true });
+
+                });
+
+            })
+
+        );
+
+    }
+
+
+    function esc(s) {
+
+        return String(s == null ? "" : s)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+
+    }
+
+
+    function buildCaptureHTML() {
+
+        const d = invoiceData;
+
+        const td =
+            "padding:9px 3px;border-bottom:1px solid #bae6fd;" +
+            "text-align:center;vertical-align:middle;font-size:11.5px;" +
+            "color:#0f172a;word-break:break-word;";
+
+        const rows = d.items.map(function(it, i) {
+
+            return (
+                '<tr>' +
+                '<td style="' + td + '">' + (i + 1) + '</td>' +
+                '<td style="' + td + '"><span style="display:inline-block;padding:3px 7px;border-radius:999px;font-size:9.5px;font-weight:700;letter-spacing:0.4px;text-transform:uppercase;background:#e0f2fe;color:#0c4a6e;border:1px solid #38bdf8;">' + esc(it.category) + '</span></td>' +
+                '<td style="' + td + '"><span style="display:inline-block;padding:4px 7px;border-radius:8px;font-size:11.5px;font-weight:700;background:#ffffff;color:#0f172a;border:1px solid #94a3b8;">' + esc(it.name) + '</span></td>' +
+                '<td style="' + td + '">' + esc(it.brand) + '</td>' +
+                '<td style="' + td + '">' + esc(it.ident) + '</td>' +
+                '<td style="' + td + '">' + it.qty + '</td>' +
+                '<td style="' + td + 'font-size:11px;white-space:nowrap;">Rs. ' + esc(it.price) + '</td>' +
+                '<td style="' + td + 'font-size:11px;white-space:nowrap;">Rs. ' + esc(it.total) + '</td>' +
+                '</tr>'
+            );
+
+        }).join("");
+
+        const th =
+            "background:#1d4ed8;color:#ffffff;font-size:10px;font-weight:700;" +
+            "letter-spacing:0.5px;text-transform:uppercase;padding:8px 3px;" +
+            "text-align:center;";
+
+        const infoIcon =
+            '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5"/><circle cx="12" cy="16.5" r="0.6" fill="#000000"/></svg>';
+
+        const checkIcon =
+            '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#15803d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+
+        const siIcon =
+            '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5"/><circle cx="12" cy="16.5" r="0.6" fill="#0284c7"/></svg>';
+
+        const phoneIcon =
+            '<svg width="30" height="30" viewBox="0 0 24 24" fill="#2563eb"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>';
+
+        const pinIcon =
+            '<svg width="30" height="30" viewBox="0 0 24 24" fill="#2563eb"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5c-1.4 0-2.5-1.1-2.5-2.5S10.6 6.5 12 6.5s2.5 1.1 2.5 2.5S13.4 11.5 12 11.5z"/></svg>';
+
+        const cardBox =
+            "border:1px solid #38bdf8;border-left:5px solid #1d4ed8;" +
+            "border-radius:12px;" +
+            "background:linear-gradient(135deg,#e0f2fe,#f0f9ff);" +
+            "box-shadow:0 0 12px rgba(56,189,248,0.30);";
+
+        return (
+
+            '<div style="width:794px;padding:19px;background:#ffffff;font-family:\'Poppins\',Arial,sans-serif;color:#111111;">' +
+
+            // halki neeli ring (glow ki jagah)
+            '<div style="border:4px solid #e0f2fe;border-radius:23px;">' +
+
+            '<div style="position:relative;overflow:hidden;padding:38px 34px 34px;border:2px solid #38bdf8;border-radius:18px;background:#ffffff;">' +
+
+            '<div style="position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,#1d4ed8,#38bdf8,#1d4ed8);"></div>' +
+
+            '<img src="' + esc(d.logo) + '" alt="" style="position:absolute;top:50%;left:50%;width:520px;height:520px;margin:-260px 0 0 -260px;border-radius:50%;object-fit:cover;opacity:0.20;">' +
+
+            '<div style="position:relative;">' +
+
+            // HEADER
+            '<div style="display:flex;justify-content:space-between;align-items:center;gap:20px;padding-bottom:12px;margin-bottom:14px;border-bottom:2px solid #38bdf8;">' +
+
+                '<div style="display:flex;align-items:center;gap:16px;">' +
+                    '<img src="' + esc(d.logo) + '" alt="" style="width:82px;height:82px;border-radius:50%;object-fit:cover;box-shadow:0 0 14px rgba(56,189,248,0.95), 0 0 26px rgba(37,99,235,0.7);">' +
+                    '<div>' +
+                        '<div style="font-size:30px;font-weight:800;line-height:1.1;color:#0ea5e9;text-shadow:0 0 12px rgba(56,189,248,0.7);">Laptech World</div>' +
+                        '<div style="margin-top:6px;font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:#475569;">Mobile &amp; Laptop Shop</div>' +
+                    '</div>' +
+                '</div>' +
+
+                '<div style="text-align:right;">' +
+                    '<div style="margin:0 0 10px;font-size:30px;font-weight:800;letter-spacing:2px;color:#0ea5e9;text-shadow:0 0 14px rgba(56,189,248,0.6);">INVOICE</div>' +
+                    '<span style="display:inline-block;padding:6px 16px;border-radius:999px;font-size:14px;font-weight:700;color:#0369a1;background:#e0f2fe;border:1px solid #38bdf8;">' + esc(d.number) + '</span>' +
+                    '<div style="margin-top:8px;font-size:13px;color:#475569;">' + esc(d.date) + '</div>' +
+                '</div>' +
+
+            '</div>' +
+
+            // CUSTOMER
+            '<div style="display:flex;gap:40px;padding:12px 16px;margin-bottom:14px;border:1px solid #bae6fd;border-left:5px solid #2563eb;border-radius:12px;background:#f1f5f9;">' +
+                '<div><div style="margin-bottom:3px;font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;color:#475569;">Customer Name</div><div style="font-size:15px;color:#0f172a;">' + esc(d.customer) + '</div></div>' +
+                '<div><div style="margin-bottom:3px;font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;color:#475569;">Phone</div><div style="font-size:15px;color:#0f172a;">' + esc(d.phone) + '</div></div>' +
+            '</div>' +
+
+            // TABLE (min-width:0 zaroori hai, warna Qty/Price/Total kat jate hain)
+            '<div style="overflow:hidden;border:1px solid #7dd3fc;border-radius:10px;background:#ffffff;">' +
+            '<table style="width:100%;min-width:0;border-collapse:collapse;table-layout:fixed;">' +
+                '<colgroup><col style="width:5%"><col style="width:16%"><col style="width:19%"><col style="width:11%"><col style="width:19%"><col style="width:5%"><col style="width:12.5%"><col style="width:12.5%"></colgroup>' +
+                '<thead><tr>' +
+                    '<th style="' + th + '">#</th>' +
+                    '<th style="' + th + '">Category</th>' +
+                    '<th style="' + th + '">Product</th>' +
+                    '<th style="' + th + '">Brand</th>' +
+                    '<th style="' + th + '">IMEI / Serial</th>' +
+                    '<th style="' + th + '">Qty</th>' +
+                    '<th style="' + th + '">Sale Price</th>' +
+                    '<th style="' + th + '">Total</th>' +
+                '</tr></thead>' +
+                '<tbody>' + rows + '</tbody>' +
+            '</table>' +
+            '</div>' +
+
+            // PENDING + GRAND TOTAL
+            '<div style="display:flex;align-items:stretch;justify-content:space-between;gap:24px;margin:14px 0;">' +
+
+                '<div style="flex:1;min-width:0;padding:12px 15px;' + cardBox + '">' +
+                    '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:14px;font-weight:800;letter-spacing:0.6px;text-transform:uppercase;color:#000000;">' +
+                        (d.pending ? infoIcon : checkIcon) +
+                        '<span>' + (d.pending ? "PENDING PAYMENT" : "FULLY PAID") + '</span>' +
+                    '</div>' +
+                    '<div style="display:flex;gap:20px;">' +
+                        '<div><div style="font-size:9px;font-weight:800;letter-spacing:0.8px;text-transform:uppercase;color:#000000;">Paid</div><div style="font-size:15px;font-weight:800;color:#000000;white-space:nowrap;">Rs. ' + esc(d.paid) + '</div></div>' +
+                        '<div><div style="font-size:9px;font-weight:800;letter-spacing:0.8px;text-transform:uppercase;color:#000000;">Remaining</div><div style="font-size:15px;font-weight:800;color:#000000;white-space:nowrap;">Rs. ' + esc(d.remaining) + '</div></div>' +
+                    '</div>' +
+                '</div>' +
+
+                '<div style="flex:0 0 250px;padding:12px 16px;text-align:right;' + cardBox + '">' +
+                    '<span style="display:inline-block;margin-bottom:4px;padding:3px 10px;border-radius:999px;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#000000;background:#ffffff;border:1px solid #38bdf8;">Grand Total</span>' +
+                    '<span style="display:block;font-size:15px;font-weight:800;color:#000000;white-space:nowrap;">Rs. ' + esc(d.total) + '</span>' +
+                '</div>' +
+
+            '</div>' +
+
+            // SPECIAL INSTRUCTION
+            '<div style="margin-top:12px;padding:10px 14px;border:1px solid #38bdf8;border-radius:12px;background:#f0f9ff;">' +
+                '<div style="display:flex;align-items:center;gap:10px;margin-bottom:5px;font-size:14px;font-weight:800;color:#000000;">' + siIcon + '<span>Special Instruction</span></div>' +
+                '<div style="padding-left:6px;font-size:12.5px;font-weight:600;line-height:1.4;color:#000000;">No Damage/Dead Warranty<br>20% Amount will be Deducted on Return</div>' +
+            '</div>' +
+
+            // SIGNATURE + CONTACT
+            '<div style="display:flex;align-items:center;margin:14px 0;">' +
+
+                '<div style="flex:1;padding:0 22px;text-align:center;">' +
+                    '<img src="' + esc(d.signature) + '" alt="" onerror="this.style.visibility=\'hidden\'" style="display:block;width:130px;max-height:60px;object-fit:contain;margin:0 auto -6px;">' +
+                    '<div style="margin:20px 0 8px;border-top:2px dashed #94a3b8;"></div>' +
+                    '<div style="font-size:14px;font-weight:700;color:#000000;">Signature</div>' +
+                '</div>' +
+
+                '<div style="flex:1.7;display:flex;flex-direction:column;gap:14px;padding-left:24px;border-left:2px solid #bae6fd;">' +
+                    '<div style="display:flex;align-items:flex-start;gap:10px;">' + phoneIcon + '<div><div style="font-size:11px;font-weight:700;color:#0284c7;">Contact</div><div style="font-size:12.5px;font-weight:800;line-height:1.4;color:#000000;text-transform:uppercase;">0307-9377774</div></div></div>' +
+                    '<div style="display:flex;align-items:flex-start;gap:10px;">' + pinIcon + '<div><div style="font-size:11px;font-weight:700;color:#0284c7;">Location</div><div style="font-size:12.5px;font-weight:800;line-height:1.4;color:#000000;text-transform:uppercase;">Shop No 101 1st Floor Twin City Arcade<br>Block B Main Markaz B17 Islamabad</div></div></div>' +
+                '</div>' +
+
+            '</div>' +
+
+            // FOOTER
+            '<div style="margin-top:12px;padding:12px;text-align:center;border:1px solid #bae6fd;border-top:3px solid #2563eb;border-radius:14px;background:#f8fafc;">' +
+                '<div style="font-size:16px;font-weight:700;color:#0f172a;">Thank you for shopping at <span style="color:#0ea5e9;">Laptech World</span></div>' +
+                '<div style="margin-top:6px;font-size:11px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:#475569;">Empowering your Digital Life</div>' +
+                '<div style="margin-top:12px;padding-top:12px;border-top:1px dashed #bae6fd;font-size:11.5px;color:#475569;">This is a computer generated invoice.</div>' +
+            '</div>' +
+
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>'
+
+        );
+
+    }
+
+
+    function captureInvoiceBlob() {
+
+        const host = document.createElement("div");
+
+        host.id = "captureHost";
+
+        host.style.cssText =
+            "position:fixed;left:-10000px;top:0;width:794px;background:#ffffff;";
+
+        host.innerHTML = buildCaptureHTML();
+
+        document.body.appendChild(host);
+
+        const fontsReady =
+            (document.fonts && document.fonts.ready)
+                ? document.fonts.ready
+                : Promise.resolve();
+
+        return fontsReady
+
+            .then(function() {
+
+                return waitForImages(host);
+
+            })
+
+            .then(function() {
+
+                return html2canvas(host, {
+
+                    backgroundColor: "#ffffff",
+
+                    scale: 2,
+
+                    useCORS: true,
+
+                    logging: false,
+
+                    windowWidth: 1200,
+
+                    onclone: function(doc) {
+
+                        const h = doc.getElementById("captureHost");
+
+                        h.style.position = "static";
+
+                        h.style.left = "auto";
+
+                    }
+
+                });
+
+            })
+
+            .then(function(canvas) {
+
+                host.remove();
+
+                return new Promise(function(resolve, reject) {
+
+                    canvas.toBlob(function(blob) {
+
+                        if (blob) {
+                            resolve(blob);
+                        } else {
+                            reject(new Error("Image creation failed"));
+                        }
+
+                    }, "image/png");
+
+                });
+
+            })
+
+            .catch(function(err) {
+
+                host.remove();
+
+                throw err;
+
+            });
+
+    }
+
+
+    // =====================================================
+    // PAKISTAN NUMBER + WHATSAPP WEB
+    // =====================================================
+
+    function normalizePKNumber(raw) {
+
+        let n = (raw || "").replace(/[^\d]/g, "");
+
+        if (n.startsWith("0092")) {
+
+            n = n.slice(2);
+
+        }
+
+        if (n.startsWith("92") && n.length === 12) {
+
+            // already international PK
+
+        } else if (n.startsWith("0") && n.length === 11) {
+
+            n = "92" + n.slice(1);
+
+        } else if (n.startsWith("3") && n.length === 10) {
+
+            n = "92" + n;
+
+        } else {
+
+            return null;
+
+        }
+
+        if (n.charAt(2) !== "3") {
+
+            return null;
+
+        }
+
+        return n;
+
+    }
+
+
+    function sendWhatsAppWeb() {
+
+        const raw =
+            document.getElementById("waNumber").value.trim();
+
+        let url = "https://web.whatsapp.com/";
+
+        if (raw !== "") {
+
+            const number = normalizePKNumber(raw);
+
+            if (!number) {
+
+                showError(
+                    "Sahi Pakistani mobile number likhein (jaise 03001234567)."
+                );
+
+                return;
+
+            }
+
+            url = "https://web.whatsapp.com/send?phone=" + number;
+
+        }
+
+        const waWindow = window.open("about:blank", "_blank");
+
+        setBusy(true);
+
+        showInfo("Invoice ki image ban rahi hai...");
+
+        const blobPromise = prepareInvoiceImage();
+
+        const canCopy =
+            navigator.clipboard && window.ClipboardItem;
+
+        const copyPromise =
+            canCopy
+
+                ? navigator.clipboard.write([
+                    new ClipboardItem({
+                        "image/png": blobPromise
+                    })
+                ])
+
+                : blobPromise.then(function(blob) {
+
+                    downloadBlob(blob);
+
+                });
+
+        copyPromise
+
+            .then(function() {
+
+                if (waWindow) {
+
+                    waWindow.location = url;
+
+                }
+
+                if (canCopy) {
+
+                    showInfo(
+                        "Image copy ho gayi. WhatsApp ki chat mein Ctrl+V dabayein, phir Send."
+                    );
+
+                } else {
+
+                    showInfo(
+                        "Image download ho gayi. WhatsApp mein attach (paperclip) se bhej dein."
+                    );
+
+                }
+
+            })
+
+            .catch(function() {
+
+                blobPromise
+
+                    .then(function(blob) {
+
+                        downloadBlob(blob);
+
+                        if (waWindow) {
+
+                            waWindow.location = url;
+
+                        }
+
+                        showInfo(
+                            "Image download ho gayi. WhatsApp mein attach (paperclip) se bhej dein."
+                        );
+
+                    })
+
+                    .catch(function() {
+
+                        if (waWindow) {
+
+                            waWindow.close();
+
+                        }
+
+                        showError(
+                            "Image nahi ban saki. Page dobara load karke try karein."
+                        );
+
+                    });
+
+            })
+
+            .finally(function() {
+
+                setBusy(false);
+
+                const shareBtn = document.getElementById("shareBtn");
+
+                shareBtn.textContent = "Share";
+
+            });
+
+    }
+
+
+    // =====================================================
+    // SHARE (Windows share panel -> WhatsApp / koi bhi app)
+    // =====================================================
+
+    function shareInvoice() {
+
+        if (!cachedJpeg) {
+
+            showInfo(
+                "Image ban rahi hai, thori dair baad dobara Share dabayein..."
+            );
+
+            prepareInvoiceImage().catch(function() {
+
+                showError(
+                    "Image nahi ban saki. Page dobara load karke try karein."
+                );
+
+            });
+
+            return;
+
+        }
+
+        const file =
+            new File(
+                [cachedJpeg],
+                "Invoice-" + invoiceData.number + ".jpg",
+                { type: "image/jpeg" }
+            );
+
+        if (
+            navigator.canShare &&
+            navigator.canShare({ files: [file] })
+        ) {
+
+            navigator.share({
+
+                files: [file],
+
+                title: "Invoice " + invoiceData.number
+
+            })
+
+            .then(closePrintModal)
+
+            .catch(function(err) {
+
+                // User ne khud cancel kiya
+                if (err && err.name === "AbortError") {
+                    return;
+                }
+
+                shareFallback();
+
+            });
+
+            return;
+
+        }
+
+        shareFallback();
+
+    }
+
+
+    // Share panel na khule to: image copy + WhatsApp Desktop open
+    function shareFallback() {
+
+        const openWA = function() {
+
+            window.location.href = "whatsapp://send";
+
+        };
+
+        const canCopy =
+            navigator.clipboard && window.ClipboardItem;
+
+        if (canCopy) {
+
+            navigator.clipboard.write([
+                new ClipboardItem({
+                    "image/png": cachedBlob
+                })
+            ])
+
+            .then(function() {
+
+                showInfo(
+                    "Image copy ho gayi. WhatsApp khul raha hai: jis ko bhejna ho us ki chat kholein, Ctrl+V dabayein, phir Send."
+                );
+
+                openWA();
+
+            })
+
+            .catch(function() {
+
+                downloadBlob(cachedBlob);
+
+                showInfo(
+                    "Image download ho gayi. WhatsApp mein attach (paperclip) se bhej dein."
+                );
+
+                openWA();
+
+            });
+
+            return;
+
+        }
+
+        downloadBlob(cachedBlob);
+
+        showInfo(
+            "Image download ho gayi. WhatsApp mein attach (paperclip) se bhej dein."
+        );
+
+        openWA();
+
+    }
+
+
+    document.addEventListener(
+        "keydown",
+        function(e) {
+
+            if (e.key === "Escape") {
+
+                closePrintModal();
+
+            }
+
+        }
+    );
+
+</script>
+
+</body>
+</html>

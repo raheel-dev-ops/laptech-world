@@ -7,10 +7,10 @@
   "theme_color": "#0d1117",
   "icons": [
     {
-      "src": "https://laptech-world.onrender.com/static/images/logo.png",
-      "sizes": "617x589",
+      "src": "/static/images/logo.png",
+      "sizes": "192x192 512x512 617x589",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }

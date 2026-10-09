@@ -8,8 +8,9 @@
   "icons": [
     {
       "src": "https://laptech-world.onrender.com/static/images/logo.png",
-      "sizes": "192x192 512x512",
-      "type": "image/png"
+      "sizes": "617x589",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
